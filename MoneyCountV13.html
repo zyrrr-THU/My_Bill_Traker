@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>记账工具（PWA）- 增强版</title>
+<style>
+    :root{
+        --bg:#f6f7fb;
+        --card:#ffffff;
+        --primary:#2b8cff;
+        --accent:#4caf50;
+        --danger:#ff6b6b;
+        --muted:#777;
+        --radius:12px;
+        --gap:10px;
+    }
+    *{box-sizing:border-box}
+    body{
+        margin:0;
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+        background:var(--bg);
+        color:#111;
+        -webkit-font-smoothing:antialiased;
+        line-height:1.4;
+        font-size:16px;
+    }
+    header{
+        background:linear-gradient(90deg,var(--primary),#3db0ff);
+        color:white;
+        padding:20px 16px;
+    }
+    header h1{margin:0;font-size:20px;text-align:center}
+    .wrap{max-width:900px;margin:var(--gap) auto;padding:0 12px}
+    .card{
+        background:var(--card);
+        border-radius:var(--radius);
+        padding:14px;
+        box-shadow:0 6px 18px rgba(20,24,50,0.06);
+        margin-bottom:var(--gap); 
+    }
+    label{display:block;font-weight:600;margin-bottom:6px}
+    input,select,textarea,button{
+        font-size:16px;padding:12px;border-radius:10px;border:1px solid #e3e7ef;
+        width:100%;
+        margin-bottom:8px; 
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--primary);
+    }
+    /* 错误状态样式 */
+    input.error-input, select.error-input {
+        border-color: var(--danger);
+        background-color: #fff8f8;
+    }
+    .error-msg {
+        color: var(--danger);
+        font-size: 12px;
+        margin-top: -6px;
+        margin-bottom: 8px;
+        display: none; /* 默认隐藏 */
+    }
+
+    textarea{min-height:80px}
+    .row{display:flex;gap:var(--gap);margin-bottom:8px} 
+    .row .col{flex:1}
+    .small{font-size:13px;color:var(--muted)}
+    
+    button.primary{background:var(--accent);color:#fff;border:none}
+    button.ghost{background:#fff;color:var(--primary);border:1px solid var(--primary)}
+    button.export{background:var(--primary);color:#fff;border:none}
+    button.danger{background:var(--danger);color:#fff;border:none}
+    
+    .tabbar{display:flex;gap:8px;overflow:auto}
+    .tab{
+        flex:1;padding:10px;text-align:center;border-radius:10px;background:#fff;
+        border:1px solid #e7eefc;cursor:pointer;
+        font-weight: bold; 
+    }
+    .tab.active{background:linear-gradient(90deg,var(--primary),#3db0ff);color:white;border-color:transparent}
+    
+    .list-item{
+        border-radius:10px;padding:10px;border:1px solid #eef2fb;margin-bottom:8px;
+        display:flex;
+        justify-content:space-between;
+        align-items:flex-start;
+        gap:8px;
+    }
+    .meta{color:var(--muted);font-size:13px;line-height:1.4;}
+    .btns{display:flex;gap:8px; flex-shrink:0;}
+    .btn{padding:4px 10px;border-radius:8px;border:none;cursor:pointer; flex-grow: 1;}
+    .btn.edit{background:#ffd54f}
+    .btn.del{background:#ff6b6b;color:white}
+
+
+    
+    .stats-row{display:flex;gap:var(--gap);flex-wrap:wrap; justify-content:space-around;} 
+    .chart{background:var(--card);border-radius:10px;padding:8px;flex:1 1 300px;min-width:280px;box-shadow:0 2px 6px rgba(0,0,0,0.03)}
+    .note{font-size:13px;color:var(--muted);margin-top:6px}
+    footer{padding:12px 16px;text-align:center;color:var(--muted);font-size:13px}
+
+    .tag-cloud{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;margin-bottom:12px;}
+    .tag-cloud-item{padding:4px 8px;background:#eef2fb;color:#333;border-radius:6px;font-size:13px;cursor:pointer;transition:background-color 0.2s;}
+    .tag-cloud-item:hover{background:#dce0e9;}
+
+    /* 筛选器区域 */
+    .all-filters-row {
+        display: flex; gap: 8px; flex-wrap: wrap; overflow-x: hidden; padding-bottom: 12px;
+        border-bottom: 1px solid #eef2fb; margin-left: -12px; margin-right: -12px; padding-left: 12px; padding-right: 12px;
+    }
+    .all-filters-row > * { margin-bottom: 0; padding: 8px 10px; flex-grow: 1; min-width: 130px; }
+    .all-filters-row input[type="text"] { flex-basis: 100%; min-width: 100%; }
+    .all-filters-row input[type="date"] { max-width: 50%; flex-basis: 40%; min-width: 120px; }
+
+    /* 批处理/回收站组件布局 */
+    #batchTrashControls {
+        display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; 
+    }
+    .batch-controls-left { display: flex; align-items: center; gap: 8px; flex-grow: 1; }
+    .batch-controls-right { display: flex; gap: 8px; flex-shrink: 0; }
+
+    /* Custom Modal Overlay */
+    .custom-modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); z-index: 10000;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .custom-modal {
+        background: white; width: 90%; max-width: 400px; padding: 20px;
+        border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .custom-modal h3 { margin-top: 0; }
+    .custom-modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+    @media (max-width:600px){
+        header h1{font-size:18px}
+        .row{flex-direction:column; margin-bottom:0;} 
+        #form .row:nth-of-type(3) { flex-direction: column; }
+        .stats-row{flex-direction:column; align-items:center;}
+        .chart{min-width:100%;}
+        input,select,textarea,button{ margin-bottom:12px; } 
+        .submit-actions{flex-direction:column;}
+        .submit-actions button{margin-top:4px; width:100%;}
+        #batchTrashControls { flex-direction: column; align-items: flex-start; width: 100%; }
+        .batch-controls-left, .batch-controls-right { width: 100%; margin-bottom: 8px; justify-content: flex-start; }
+        .batch-controls-right { justify-content: space-between; margin-top: 4px; margin-bottom: 0; }
+        .all-filters-row input[type="date"] { flex-basis: calc(50% - 4px); }
+    }
+</style>
+</head>
+<body>
+<header>
+    <h1>📘 轻量记账（本地 PWA）</h1>
+</header>
+
+<div class="wrap">
+
+    <div class="card">
+        <div class="tabbar" id="tabs">
+            <div class="tab active" data-tab="form">填写<br>账单</div>
+            <div class="tab" data-tab="list">查看<br>记录</div>
+            <div class="tab" data-tab="stats">数据<br>统计</div>
+            <div class="tab" data-tab="export">导出<br>导入</div>
+        </div>
+    </div>
+
+    <div id="form" class="card">
+        
+        <div class="row">
+            <div class="col">
+                <label>🏙️ 城市</label>
+                <select id="city" onchange="toggleCustomCity()">
+                    <option value="">请选择（可选）</option>
+                    <option>洛桑</option><option>日内瓦</option><option>苏黎世</option><option>伯尔尼</option><option>因特拉肯</option><option>卢塞恩</option><option>采尔玛特</option><option>蒙特勒</option><option>Veywey</option><option>米兰</option><option>佛罗伦萨</option><option>罗马</option><option>北京</option>
+                    <option value="other">其他（自定义）</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>📅 日期与时间</label>
+                <input id="datetime" type="datetime-local" oninput="clearError(this)">
+                <div class="error-msg" id="error-datetime">请输入有效的日期和时间</div>
+            </div>
+        </div>
+        <input id="customCity" style="display:none; margin-top:-8px; margin-bottom:8px;" placeholder="请输入自定义城市">
+        
+        <div class="row">
+            <div class="col">
+                <label>👤 付款人</label>
+                <select id="payer" onchange="toggleCustomPayer()">
+                    <option>ZYR</option><option>TL</option>
+                    <option value="other">其他（自定义）</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>💳 付款渠道</label>
+                <select id="channel" onchange="toggleCustomChannel()">
+                    <option>信用卡</option><option>现金</option><option>银行卡</option><option>微信</option><option>支付宝</option>
+                    <option value="other">其他（自定义）</option>
+                </select>
+            </div>
+        </div>
+        <input id="customPayer" style="display:none; margin-top:-8px; margin-bottom:8px;" placeholder="请输入自定义付款人"> 
+        <input id="customChannel" style="display:none; margin-top:-8px; margin-bottom:8px;" placeholder="请输入自定义付款渠道"> 
+
+
+        <div class="row" style="--gap: 8px;"> 
+            <div class="col">
+                <label>💰 金额</label>
+                <input id="amount" type="number" placeholder="请输入金额" oninput="clearError(this)">
+                <div class="error-msg" id="error-amount">请输入有效的金额</div>
+            </div>
+            <div class="col">
+                <label>💴 币种</label>
+                <select id="currency" onchange="toggleCustomCurrency()">
+                    <option>瑞郎</option><option>美元</option><option>人民币</option><option>欧元</option>
+                    <option value="other">其他（自定义）</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>📋 账单所有人</label>
+                <select id="billOwner" onchange="toggleCustomOwner()">
+                    <option>ZYR</option><option>TL</option><option>公共</option>
+                    <option value="other">其他（自定义）</option>
+                </select>
+            </div>
+        </div>
+
+        <input id="customCurrency" style="display:none; margin-bottom:8px;" placeholder="请输入自定义币种">
+        <input id="customBillOwner" style="display:none; margin-top:-8px; margin-bottom:8px;" placeholder="请输入自定义账单所有人">
+        
+        <label>🏷️ 标签</label>
+        <input id="tag" placeholder="例如：吃饭/交通/纪念品">
+        <div class="tag-cloud" id="tagCloud">
+            </div>
+        
+        <label>📝 备注</label>
+        <textarea id="note" placeholder="说明来源或更详细信息"></textarea>
+
+        <div style="display:flex;gap:10px; margin-top:8px" class="submit-actions">
+            <button class="primary" id="submitBtn">✨ 提交记录</button>
+        </div>
+
+        <!-- <p class="note">提交后数据保存在本地浏览器（localStorage）。</p> -->
+    </div>
+
+    <div id="list" class="card" style="display:none">
+        
+        <div id="listControls">
+            
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div><strong>所有记录</strong><div class="small">总条数：<span id="totalCount">0</span></div></div>
+            </div>
+
+            <div id="allFilters" class="all-filters-row">
+                <input id="search" type="text" placeholder="🔎 搜索备注/金额" style="min-width:160px;"/>
+                
+                <select id="sortOrder" title="排序方式" style="background-color:#fff;">
+                    <option value="time_desc">📅 时间：新->旧</option>
+                    <option value="time_asc">📅 时间：旧->新</option>
+                    <option value="amount_desc">💰 金额：高->低 (CNY)</option>
+                    <option value="amount_asc">💰 金额：低->高 (CNY)</option>
+                </select>
+
+                <input type="date" id="filterStartDate" title="开始日期"/>
+                <input type="date" id="filterEndDate" title="结束日期"/>
+                <select id="filterTag"></select>
+                <select id="filterChannel"></select>
+                <select id="filterPayer"></select> 
+                <select id="filterCurrency"></select>
+                <select id="filterCity"></select>
+                <select id="filterOwner"></select> 
+            </div>
+
+
+            <div id="batchTrashControls">
+                <div class="batch-controls-left">
+                    <label for="pageSize" style="margin:0; font-weight:normal; font-size:14px; flex-shrink:0;">每页显示:</label>
+                    <select id="pageSize" style="width:70px; flex-grow:0; flex-shrink:0; margin:0; padding:6px 8px; font-size:14px;">
+                        <option value="10">10条</option>
+                        <option value="25">25条</option>
+                        <option value="50">50条</option>
+                        <option value="all">全部</option>
+                    </select>
+
+                    <input type="checkbox" id="selectAllCheckbox" style="width:20px; height:20px; margin:0 0 0 8px; flex-grow:0;"/>
+                    <label for="selectAllCheckbox" style="margin:0; font-weight:normal; font-size:14px; flex-grow:1; flex-basis:0;">本页全选</label> 
+                </div>
+                
+                <div class="batch-controls-right">
+                    <button class="btn del" id="batchDeleteBtn" style="padding:8px 12px;">🗑️ 批量删除 (<span id="selectedCount">0</span>)</button>
+                    <button class="ghost" id="openTrashBtn" style="padding:6px 10px;">♻️ 回收站</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="paginationControls" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:10px; margin-bottom:10px;">
+            <button id="prevPageBtn" class="ghost" style="padding:6px 10px;">上一页</button>
+            <span id="pageInfo" class="small"></span>
+            <button id="nextPageBtn" class="ghost" style="padding:6px 10px;">下一页</button>
+        </div>
+        
+        <div id="recordsContainer"></div>
+        
+        <div id="trashContainer" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eef2fb; padding-bottom:10px; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <strong>回收站记录</strong> (<span id="trashCount">0</span> 条)
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="primary" id="batchRestoreBtn" style="padding:6px 10px;">批量恢复 (<span id="selectedTrashCount">0</span>)</button>
+                    <button class="btn del" id="clearTrashBtn" style="padding:6px 10px;">清空回收站</button>
+                    <button class="ghost" id="closeTrashBtn" style="padding:6px 10px;">返回列表</button>
+                </div>
+            </div>
+            <div id="trashRecordsContainer"></div>
+        </div>
+
+        <p class="note" id="listNote">点击“编辑”弹出对话框进行修改；删除会要求确认。删除的记录将移入回收站。</p>
+    </div>
+
+    <div id="stats" class="card" style="display:none">
+        <strong>📊 统计</strong>
+        <div style="margin-top:8px;">
+            <label for="statsFilterOwner" style="font-weight:normal; margin-bottom:4px; font-size:14px;">统计对象 (账单所有人)</label>
+            <select id="statsFilterOwner" multiple>
+                </select>
+        </div>
+        <div class="stats-row" style="margin-top:12px">
+            <div class="chart" style="flex: 0 0 100%;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <div><strong>按周每日总额 (CNY)</strong></div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <input type="date" id="weekStartDate" onchange="drawCharts()" style="width:auto; max-width:140px; padding:6px 8px; margin:0;"/>
+                    </div>
+                </div>
+                <canvas id="barChart" width="600" height="260" style="width:100%;height:200px"></canvas>
+            </div>
+            
+            <div class="chart" style="flex: 0 0 100%;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <div><strong>按标签/类别分布 (CNY)</strong></div>
+                </div>
+                <canvas id="categoryPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
+            </div>
+
+            <div class="chart" style="flex: 0 0 100%;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <div><strong>按付款渠道分布 (CNY)</strong></div>
+                </div>
+                <canvas id="channelPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
+            </div>
+
+            <div class="chart" style="flex: 0 0 100%;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <div><strong>按付款人分布 (CNY)</strong></div>
+                </div>
+                <canvas id="payerPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
+            </div>
+
+            <div class="chart" style="flex: 0 0 100%;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                    <div><strong>按城市分布 (CNY)</strong></div>
+                </div>
+                <canvas id="cityPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
+            </div>
+        </div>
+        <p class="note">所有统计图的金额已统一折算为人民币 (CNY)。汇率: 美元 7.15, 瑞郎 8.82, 欧元 8.24。</p>
+    </div>
+
+    <div id="export" class="card" style="display:none">
+        <strong>📤 导出数据</strong>
+        <div style="display:flex;gap:8px;margin-top:10px" class="export-actions">
+            <button class="export" onclick="exportJSON()">导出 JSON</button>
+            <button class="export" onclick="exportCSV()">导出 CSV</button>
+            <!-- <button class="export" onclick="exportTXT()">导出 TXT</button> -->
+        </div>
+
+        <div style="margin-top:20px;">
+            <strong>📥 导入数据</strong>
+            <p class="note" style="margin-bottom:8px;">导入功能只会**增补**数据，不会覆盖或删除现有记录。重复数据会通过新ID保留。</p>
+            <div style="display:flex;gap:8px; align-items:center; margin-bottom:8px">
+                <input type="file" id="jsonInput" accept=".json" style="flex:1"/>
+                <button class="primary" onclick="importJSON()" style="flex:0 0 90px;">导入 JSON</button>
+            </div>
+<!--             <div style="display:flex;gap:8px; align-items:center;">
+                <input type="file" id="csvInput" accept=".csv" style="flex:1"/>
+                <button class="primary" onclick="importCSV()" style="flex:0 0 90px;">导入 CSV</button>
+            </div> -->
+        </div>
+<!-- 
+        <p class="note" style="margin-top:12px">
+            PWA 安装说明：请将此文件放到简单的本地服务器以获得完整的安装体验。
+        </p> -->
+
+        <div style="margin-top:10px">
+            <button class="ghost" id="promptInstallBtn" style="display:none">安装到手机桌面</button>
+        </div>
+    </div>
+
+</div>
+
+<footer class="card" style="text-align:center">
+    🔒 数据保存在浏览器本地（localStorage），不会自动上传。
+</footer>
+
+<script>
+/* ===========================
+   Storage helpers & init
+   ============================ */
+const STORAGE_KEY = "records";
+const TRASH_KEY = "records_trash"; 
+const CITY_KEY = "last_city"; // 记录上次城市
+const COMMON_TAGS = ["吃饭", "交通", "门票", "住宿", "超市", "纪念品", "娱乐", "零食", "咖啡", "衣服" , "物资", "签证"];
+
+/**
+ * UPDATED: Exchange Rates
+ */
+const EXCHANGE_RATES = { 
+    "人民币": 1, 
+    "美元": 7.15, 
+    "瑞郎": 8.82, 
+    "欧元": 8.24,
+    "其他": 1, 
+    "未知币种": 1 
+};
+
+function convertToCNY(amount, currency){
+    const rate = EXCHANGE_RATES[currency] || 1; 
+    return (Number(amount) || 0) * rate;
+}
+
+function loadRecords(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch(e){ return []; }
+}
+function saveRecords(list){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+function loadTrash(){ 
+    try { return JSON.parse(localStorage.getItem(TRASH_KEY) || "[]"); } catch(e){ return []; }
+}
+function saveTrash(list){ 
+    localStorage.setItem(TRASH_KEY, JSON.stringify(list));
+}
+
+/* init controls */
+const cityEl = document.getElementById("city"); 
+const customCityEl = document.getElementById("customCity"); 
+const currencyEl = document.getElementById("currency");
+const customCurrencyEl = document.getElementById("customCurrency");
+const channelEl = document.getElementById("channel"); 
+const customChannelEl = document.getElementById("customChannel"); 
+const payerEl = document.getElementById("payer"); 
+const customPayerEl = document.getElementById("customPayer"); 
+const billOwnerEl = document.getElementById("billOwner"); 
+const customBillOwnerEl = document.getElementById("customBillOwner"); 
+
+const amountEl = document.getElementById("amount");
+const datetimeEl = document.getElementById("datetime");
+const noteEl = document.getElementById("note");
+const tagEl = document.getElementById("tag");
+const submitBtn = document.getElementById("submitBtn");
+const tagCloudEl = document.getElementById("tagCloud");
+
+// Toggle Custom Inputs
+function toggleCustom(mainEl, customEl, valCheck="other") {
+    customEl.style.display = mainEl.value === valCheck ? "block" : "none";
+}
+function toggleCustomCurrency(){ toggleCustom(currencyEl, customCurrencyEl); }
+function toggleCustomChannel(){ toggleCustom(channelEl, customChannelEl); }
+function toggleCustomPayer(){ toggleCustom(payerEl, customPayerEl); }
+function toggleCustomCity(){ toggleCustom(cityEl, customCityEl); }
+function toggleCustomOwner(){ toggleCustom(billOwnerEl, customBillOwnerEl); }
+
+/* Set default time and Load last City */
+function initDefaults(){
+    const now = new Date();
+    // Use Math.max to handle potential DST issues or inconsistencies with toISOString in some environments, ensuring 16 characters max.
+    const localISO = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0,16); 
+    datetimeEl.value = localISO;
+
+    // Load last city
+    const lastCity = localStorage.getItem(CITY_KEY);
+    if (lastCity) {
+        // Check if lastCity is in option list
+        let found = false;
+        Array.from(cityEl.options).forEach(opt => {
+            if (opt.value === lastCity) found = true;
+        });
+        
+        if (found) {
+            cityEl.value = lastCity;
+            customCityEl.value = ""; // Clear custom input if city is in list
+        } else {
+            cityEl.value = "other";
+            customCityEl.value = lastCity;
+            customCityEl.style.display = "block";
+        }
+    }
+    // Set default currency if not set
+    if (!currencyEl.value) currencyEl.value = '瑞郎';
+}
+
+/* Error Handling (Inline) */
+function showError(el, msgElId) {
+    el.classList.add("error-input");
+    document.getElementById(msgElId).style.display = "block";
+}
+function clearError(el) {
+    el.classList.remove("error-input");
+    const msgEl = el.nextElementSibling; // Assuming div.error-msg is next
+    if (msgEl && msgEl.classList.contains("error-msg")) msgEl.style.display = "none";
+}
+
+/* Tag Cloud */
+function initTagCloud(){
+    tagCloudEl.innerHTML = ""; 
+    COMMON_TAGS.forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "tag-cloud-item";
+        span.textContent = tag;
+        span.onclick = () => {
+            let current = tagEl.value.trim();
+            if (current && !current.endsWith('/')) current += '/'; 
+            if (!current.split('/').map(t=>t.trim()).includes(tag)) tagEl.value = current + tag + '/'; // Check if tag already exists in the slash-separated list
+            tagEl.focus();
+        };
+        tagCloudEl.appendChild(span);
+    });
+}
+initTagCloud();
+
+/* Submission Logic with Duplicate Check */
+submitBtn.addEventListener("click", ()=>{
+    const cur = currencyEl.value === "other" ? (customCurrencyEl.value || "其他") : currencyEl.value;
+    const channel = channelEl.value === "other" ? (customChannelEl.value || "其他") : channelEl.value; 
+    const payer = payerEl.value === "other" ? (customPayerEl.value || "其他") : payerEl.value; 
+    // If 'other' is selected but custom is empty, treat as '其他城市'
+    const city = cityEl.value === "other" ? (customCityEl.value || "其他城市") : (cityEl.value || "未指定城市"); 
+    const owner = billOwnerEl.value === "other" ? (customBillOwnerEl.value || "其他") : billOwnerEl.value; 
+    const amountVal = parseFloat(amountEl.value);
+    
+    // Validation
+    let isValid = true;
+    if (isNaN(amountVal) || amountVal === null){ // Check for NaN and null/undefined
+        showError(amountEl, "error-amount");
+        isValid = false;
+    }
+    if (!datetimeEl.value){
+        showError(datetimeEl, "error-datetime");
+        isValid = false;
+    }
+    if (!isValid) return;
+
+    // Save City preference
+    if (city && city !== "未指定城市") localStorage.setItem(CITY_KEY, city);
+
+    const newRecord = {
+        id: "r" + Date.now() + Math.random().toString(36).slice(2,7),
+        city: city, 
+        currency: cur,
+        amount: amountVal,
+        payer: payer, 
+        channel: channel, 
+        owner: owner, 
+        datetime: datetimeEl.value,
+        tag: tagEl.value || "",
+        note: noteEl.value || ""
+    };
+
+    // MODIFICATION 1: Duplicate Detection (City + Amount + Currency + Payer + Channel + Owner)
+    const list = loadRecords();
+    const duplicate = list.find(r => 
+        r.city === newRecord.city &&
+        Math.abs(r.amount - newRecord.amount) < 0.001 &&
+        r.currency === newRecord.currency &&
+        r.payer === newRecord.payer &&
+        r.channel === newRecord.channel &&
+        r.owner === newRecord.owner
+    );
+
+    if (duplicate) {
+        showDuplicateModal(duplicate, newRecord);
+    } else {
+        saveNewRecord(newRecord, list);
+    }
+});
+
+function saveNewRecord(record, currentList = null) {
+    const list = currentList || loadRecords();
+    list.unshift(record); 
+    saveRecords(list);
+    
+    hopFeedback("已保存");
+    amountEl.value=""; noteEl.value=""; tagEl.value=""; 
+    // Do not clear city, retain it
+    initDefaults(); // Reset time to now
+    refreshList();
+    drawCharts();
+}
+
+function showDuplicateModal(oldRec, newRec) {
+    const overlay = document.createElement("div");
+    overlay.className = "custom-modal-overlay";
+    overlay.innerHTML = `
+        <div class="custom-modal">
+            <h3>检测到疑似重复记录</h3>
+            <p style="font-size:14px; color:#555;">您输入的记录（<strong>${newRec.currency}${newRec.amount}</strong> - ${newRec.city} - ${newRec.payer}）与现有记录（ID: ${oldRec.id}）完全一致。</p>
+            <div class="custom-modal-btns">
+                <button class="ghost" id="cancelDup">取消</button>
+                <button class="primary" id="keepBothDup" style="background:#f39c12; border:none;">保留两者</button>
+                <button class="danger" id="overwriteDup">覆盖旧记录</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    document.getElementById("cancelDup").onclick = () => overlay.remove();
+    
+    document.getElementById("keepBothDup").onclick = () => {
+        // Add a note to distinguish the kept duplicates
+        newRec.note = (newRec.note ? newRec.note + " " : "") + "(疑似重复项)";
+        saveNewRecord(newRec);
+        overlay.remove();
+    };
+
+    document.getElementById("overwriteDup").onclick = () => {
+        let list = loadRecords();
+        const idx = list.findIndex(r => r.id === oldRec.id);
+        if (idx !== -1) {
+            // Keep old ID but update all other fields with new data
+            list[idx] = { ...newRec, id: oldRec.id }; 
+            saveRecords(list);
+            hopFeedback("已覆盖旧记录");
+            amountEl.value=""; noteEl.value=""; tagEl.value="";
+            initDefaults();
+            refreshList();
+            drawCharts();
+        }
+        overlay.remove();
+    };
+}
+
+/* Feedback Toast */
+function hopFeedback(msg){
+    const t = document.createElement("div");
+    t.textContent = msg;
+    t.style.position="fixed";t.style.left="50%";t.style.transform="translateX(-50%)";t.style.bottom="28px";
+    t.style.background="rgba(0,0,0,0.75)";t.style.color="#fff";t.style.padding="10px 14px";
+    t.style.borderRadius="10px";t.style.zIndex=9999;
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),1400);
+}
+
+/* ===========================
+   Tabs
+   ============================ */
+document.getElementById("tabs").addEventListener("click", (e)=>{
+    const t = e.target.closest(".tab");
+    if (!t) return;
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    const tab = t.getAttribute("data-tab");
+    showTab(tab);
+});
+
+function showTab(name){
+    ["form","list","stats","export"].forEach(id=>{
+        document.getElementById(id).style.display = (id===name) ? "block":"none";
+    });
+    if (name==="list") showRecordsList(); 
+    if (name==="stats") { 
+        if (!document.getElementById("weekStartDate").value) {
+            document.getElementById("weekStartDate").value = new Date().toISOString().substring(0, 10);
+        }
+        drawCharts(); 
+    }
+}
+
+/* ===========================
+   List view & Sorting
+   ============================ */
+const recordsContainer = document.getElementById("recordsContainer");
+const totalCountEl = document.getElementById("totalCount");
+const sortOrderEl = document.getElementById("sortOrder"); // Sort Element
+const batchRestoreBtn = document.getElementById("batchRestoreBtn");
+const selectedTrashCountEl = document.getElementById("selectedTrashCount");
+
+let selectedIds = new Set(); 
+let selectedTrashIds = new Set(); // Separate tracking for trash
+let currentPage = 1; 
+
+// Listeners
+document.getElementById("pageSize").addEventListener("change", ()=> { currentPage=1; refreshList(); }); 
+document.getElementById("prevPageBtn").addEventListener("click", ()=> { currentPage--; refreshList(); });
+document.getElementById("nextPageBtn").addEventListener("click", ()=> { currentPage++; refreshList(); });
+
+// Filters & Sort
+["search","filterPayer","filterChannel","filterTag","filterCurrency","filterCity","filterOwner","filterStartDate","filterEndDate"]
+    .forEach(id => document.getElementById(id).addEventListener("change", ()=>{ currentPage=1; refreshList(); }));
+document.getElementById("search").addEventListener("input", ()=>{ currentPage=1; refreshList(); });
+sortOrderEl.addEventListener("change", refreshList); // Sort listener
+
+// Batch
+// MODIFICATION 2: Corrected toggleSelectAll listener
+document.getElementById("selectAllCheckbox").addEventListener("change", toggleSelectAll); 
+document.getElementById("batchDeleteBtn").addEventListener("click", batchDelete); 
+batchRestoreBtn.addEventListener("click", batchRestore);
+
+// Trash
+document.getElementById("openTrashBtn").addEventListener("click", showTrashList); 
+document.getElementById("closeTrashBtn").addEventListener("click", showRecordsList); 
+document.getElementById("clearTrashBtn").addEventListener("click", clearTrash); 
+
+function populateFilterOptions(){ 
+    const list = loadRecords();
+    const tagSet = new Set(), currencySet = new Set(), channelSet = new Set(), payerSet = new Set(["ZYR", "TL"]), citySet = new Set(), ownerSet = new Set(["ZYR", "TL", "公共"]);
+    list.forEach(r => {
+        r.currency && currencySet.add(r.currency);
+        r.channel && channelSet.add(r.channel);
+        r.payer && payerSet.add(r.payer); 
+        r.city && citySet.add(r.city); 
+        r.owner && ownerSet.add(r.owner); 
+        (r.tag || "").split('/').forEach(t => t.trim() && tagSet.add(t.trim()));
+    });
+
+    const _fill = (id, set, lbl) => {
+        const el = document.getElementById(id);
+        const curr = el.value;
+        // Optimization: check if the options list needs a full rebuild
+        const sortedOptions = Array.from(set).filter(x=>x).sort().join(',');
+        const currentOptions = Array.from(el.options).filter((o,i)=>i>0).map(o=>o.value).join(',');
+        
+        if (sortedOptions !== currentOptions) {
+            el.innerHTML = `<option value=''>${lbl}</option>` + Array.from(set).filter(x=>x).sort().map(x=>`<option value="${x}">${x}</option>`).join('');
+            el.value = curr; // Restore current selection
+        }
+    };
+    _fill("filterTag", tagSet, "全部标签");
+    _fill("filterCurrency", currencySet, "全部币种");
+    _fill("filterChannel", channelSet, "全部渠道");
+    _fill("filterPayer", payerSet, "全部付款人");
+    _fill("filterCity", citySet, "全部城市");
+    _fill("filterOwner", ownerSet, "全部所有人");
+}
+
+function applyFilters(list){ 
+    const q = document.getElementById("search").value.trim().toLowerCase();
+    const filters = {
+        payer: document.getElementById("filterPayer").value,
+        channel: document.getElementById("filterChannel").value,
+        tag: document.getElementById("filterTag").value,
+        currency: document.getElementById("filterCurrency").value,
+        city: document.getElementById("filterCity").value,
+        owner: document.getElementById("filterOwner").value,
+        start: document.getElementById("filterStartDate").value,
+        end: document.getElementById("filterEndDate").value
+    };
+
+    return list.filter(r=>{
+        if (filters.payer && r.payer !== filters.payer) return false;
+        if (filters.channel && r.channel !== filters.channel) return false;
+        if (filters.currency && r.currency !== filters.currency) return false;
+        if (filters.city && r.city !== filters.city) return false;
+        if (filters.owner && r.owner !== filters.owner) return false;
+        if (filters.tag && !((r.tag||"").split('/').map(t=>t.trim()).includes(filters.tag))) return false;
+        if (r.datetime) {
+            const rd = r.datetime.substring(0, 10);
+            if (filters.start && rd < filters.start) return false;
+            if (filters.end && rd > filters.end) return false;
+        }
+        if (q && !Object.values(r).join(' ').toLowerCase().includes(q)) return false;
+        return true;
+    });
+}
+
+function formatDateTimeCompact(s){
+    if (!s) return "-";
+    try{
+        const d = new Date(s);
+        if (isNaN(d)) return s;
+        // Use options to ensure 2-digit format for consistency
+        return d.toLocaleString('zh-CN', {month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' }).replace(/\//g, '-').replace('年','-').replace('月','-').replace('日',''); 
+    }catch(e){return s}
+}
+
+let currentDisplayRecords = []; // Store the records currently displayed on the page
+
+function refreshList(){
+    populateFilterOptions();
+    let list = loadRecords();
+
+    // 4) Sorting Logic
+    const sortType = sortOrderEl.value;
+    list.sort((a, b) => {
+        if (sortType === 'time_asc') return new Date(a.datetime) - new Date(b.datetime);
+        if (sortType === 'time_desc') return new Date(b.datetime) - new Date(a.datetime);
+        if (sortType === 'amount_asc') return convertToCNY(a.amount, a.currency) - convertToCNY(b.amount, b.currency);
+        if (sortType === 'amount_desc') return convertToCNY(b.amount, b.currency) - convertToCNY(a.amount, a.currency);
+        return 0;
+    });
+    
+    const filtered = applyFilters(list);
+    totalCountEl.textContent = filtered.length;
+    recordsContainer.innerHTML = "";
+    
+    // Pagination
+    const perPageVal = document.getElementById("pageSize").value;
+    let limit = (perPageVal === 'all') ? filtered.length : parseInt(perPageVal);
+    let totalPages = Math.ceil(filtered.length / limit) || 1;
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIdx = (currentPage - 1) * limit;
+    currentDisplayRecords = filtered.slice(startIdx, startIdx + limit);
+    
+    document.getElementById("paginationControls").style.display = (limit >= filtered.length && limit > 25) ? "none" : "flex";
+    document.getElementById("prevPageBtn").style.display = currentPage > 1 ? "inline-block" : "none";
+    document.getElementById("nextPageBtn").style.display = currentPage < totalPages ? "inline-block" : "none";
+    document.getElementById("pageInfo").textContent = `第 ${currentPage} / ${totalPages} 页`;
+
+    if (currentDisplayRecords.length === 0){
+        recordsContainer.innerHTML = "<div class='small' style='text-align:center;padding:20px'>暂无记录</div>";
+        updateSelectionState();
+        return;
+    }
+
+    const grayStyle = `color: var(--muted); font-size: 13px; line-height: 1.4;`;
+    
+    currentDisplayRecords.forEach(r=>{
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `
+            <input type="checkbox" class="list-check" data-id="${r.id}" style="width:20px;height:20px;flex-shrink:0;margin-right:8px">
+            <div style="flex-grow:1;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;font-weight:600;color:#111;font-size:16px;">
+                    <span style="min-width:90px">${r.currency} ${r.amount}</span> 
+                    <span style="max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.city || '-'}</span>
+                    <span style="font-size:14px">${formatDateTimeCompact(r.datetime)}</span>
+                </div>
+                <div style="${grayStyle}">
+                    <span style="margin-right:12px">👤: <strong>${r.payer }</strong></span> 
+                    <span>📋: <strong>${r.owner }</strong></span> 
+                    <span>🏷️: ${r.tag || '-' }</span> 
+                    <span>💳: ${r.channel || '-' }</span> 
+                </div>
+                <div style="${grayStyle}white-space:normal;word-break:break-all;">备注: ${escapeHtml(r.note || "-")}</div>
+                <div class="btns" style="justify-content:flex-end;margin-top:4px">
+                    <button class="btn edit" onclick="openEditModal('${r.id}')">编辑</button>
+                    <button class="btn del" onclick="deleteRecord('${r.id}')">删除</button>
+                </div>
+            </div>
+        `;
+        const cb = div.querySelector(".list-check");
+        cb.checked = selectedIds.has(r.id);
+        cb.onclick = (e) => {
+            e.stopPropagation();
+            selectedIds.has(r.id) ? selectedIds.delete(r.id) : selectedIds.add(r.id);
+            updateSelectionState();
+        };
+        recordsContainer.appendChild(div);
+    });
+    updateSelectionState();
+}
+
+function updateSelectionState(){ 
+    document.getElementById("selectedCount").textContent = selectedIds.size;
+    const allOnPage = currentDisplayRecords.length > 0 && currentDisplayRecords.every(r => selectedIds.has(r.id));
+    document.getElementById("selectAllCheckbox").checked = allOnPage;
+}
+
+// MODIFICATION 3: Corrected toggleSelectAll logic to use currentDisplayRecords
+function toggleSelectAll(){ 
+    const master = document.getElementById("selectAllCheckbox");
+    const isChecked = master.checked;
+    
+    // Get current page IDs
+    const currentRenderedIds = currentDisplayRecords.map(r => r.id);
+
+    if (isChecked) {
+        currentRenderedIds.forEach(id => selectedIds.add(id));
+    } else {
+        currentRenderedIds.forEach(id => selectedIds.delete(id));
+    }
+    
+    // Update the visual state of individual checkboxes
+    document.querySelectorAll(".list-check").forEach(cb => {
+        cb.checked = isChecked;
+    });
+
+    updateSelectionState(); // Update the count display
+}
+
+
+function deleteRecord(id){
+    if (!confirm("确认删除？将移入回收站。")) return;
+    let list = loadRecords();
+    const idx = list.findIndex(r => r.id === id);
+    if (idx === -1) return;
+    const item = list.splice(idx, 1)[0];
+    saveRecords(list);
+    let trash = loadTrash();
+    trash.unshift(item);
+    saveTrash(trash);
+    selectedIds.delete(id);
+    refreshList();
+    drawCharts();
+    hopFeedback("已移入回收站");
+}
+
+function batchDelete(){
+    if (selectedIds.size === 0) return hopFeedback("未选择记录");
+    if (!confirm(`确认删除 ${selectedIds.size} 条记录？`)) return;
+    let list = loadRecords();
+    let trash = loadTrash();
+    let count = 0;
+    list = list.filter(r => {
+        if (selectedIds.has(r.id)) {
+            trash.unshift(r); count++; return false;
+        }
+        return true;
+    });
+    saveRecords(list); saveTrash(trash);
+    selectedIds.clear();
+    refreshList(); drawCharts();
+    hopFeedback(`已删除 ${count} 条`);
+}
+
+function escapeHtml(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/'/g,"&#39;").replace(/"/g,"&quot;"); }
+
+/* Edit Modal */
+function openEditModal(id){
+    const list = loadRecords();
+    const r = list.find(x=>x.id===id);
+    if (!r) return;
+    
+    const overlay = document.createElement("div");
+    overlay.className = "custom-modal-overlay";
+    // Sanitize values for inclusion in HTML attributes (especially for notes)
+    const safeNote = escapeHtml(r.note || '');
+    
+    overlay.innerHTML = `<div class="custom-modal" style="width:95%;max-width:500px">
+        <h3>编辑记录</h3>
+        <div style="display:flex;flex-direction:column;gap:8px">
+            <input id="e_city" value="${r.city||''}" placeholder="城市">
+            <div style="display:flex;gap:8px">
+                <input id="e_amt" type="number" value="${r.amount}" placeholder="金额">
+                <input id="e_cur" value="${r.currency}" placeholder="币种" style="width:80px">
+            </div>
+            <div style="display:flex;gap:8px">
+                <input id="e_payer" value="${r.payer}" placeholder="付款人">
+                <input id="e_chn" value="${r.channel||''}" placeholder="渠道">
+            </div>
+            <input id="e_time" type="datetime-local" value="${r.datetime}">
+            <input id="e_owner" value="${r.owner||''}" placeholder="所有人">
+            <input id="e_tag" value="${r.tag||''}" placeholder="标签">
+            <textarea id="e_note" rows="3" placeholder="备注">${safeNote}</textarea>
+        </div>
+        <div class="custom-modal-btns">
+            <button class="ghost" onclick="this.closest('.custom-modal-overlay').remove()">取消</button>
+            <button class="primary" id="e_save">保存</button>
+        </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    
+    document.getElementById("e_save").onclick = () => {
+        const idx = list.findIndex(x=>x.id===id);
+        const newAmount = parseFloat(document.getElementById("e_amt").value);
+        if (idx !== -1 && !isNaN(newAmount)) {
+            list[idx] = { ...list[idx],
+                city: document.getElementById("e_city").value || "未指定城市",
+                amount: newAmount,
+                currency: document.getElementById("e_cur").value,
+                payer: document.getElementById("e_payer").value,
+                channel: document.getElementById("e_chn").value,
+                datetime: document.getElementById("e_time").value,
+                owner: document.getElementById("e_owner").value,
+                tag: document.getElementById("e_tag").value,
+                note: document.getElementById("e_note").value
+            };
+            saveRecords(list);
+            refreshList(); drawCharts();
+            hopFeedback("修改已保存");
+            overlay.remove();
+        } else {
+             alert("金额不能为空或无效");
+        }
+    };
+}
+
+/* ===========================
+   Trash & Batch Restore
+   ============================ */
+function showRecordsList() {
+    document.getElementById("listControls").style.display='block';
+    document.getElementById("recordsContainer").style.display='block';
+    document.getElementById("paginationControls").style.display='flex';
+    document.getElementById("trashContainer").style.display='none';
+    refreshList();
+}
+
+
+function showTrashList(){ 
+    document.getElementById("listControls").style.display='none';
+    document.getElementById("recordsContainer").style.display='none';
+    document.getElementById("paginationControls").style.display='none';
+    document.getElementById("trashContainer").style.display='block';
+    
+    selectedTrashIds.clear();
+    updateTrashSelection();
+
+    const trash = loadTrash();
+    document.getElementById("trashCount").textContent = trash.length;
+    const container = document.getElementById("trashRecordsContainer");
+    container.innerHTML = "";
+
+    if (trash.length === 0){
+        container.innerHTML = "<div class='small' style='text-align:center'>空空如也</div>";
+        return;
+    }
+    
+    // 定义样式常量，与 refreshList 中保持一致
+    const grayStyle = `color: var(--muted); font-size: 13px; line-height: 1.4;`; 
+
+    trash.forEach(r=>{
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.style.background = "#fff0f0"; // 保留回收站记录的背景色
+        div.innerHTML = `
+            <input type="checkbox" class="list-check-trash" data-id="${r.id}" style="width:20px;height:20px;flex-shrink:0;margin-right:8px">
+            <div style="flex-grow:1;display:flex;flex-direction:column;gap:4px">
+                <div style="display:flex;justify-content:space-between;font-weight:600;color:#111;font-size:16px;">
+                    <span style="min-width:90px">${r.currency} ${r.amount}</span> 
+                    <span style="max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.city || '-'}</span>
+                    <span style="font-size:14px">${formatDateTimeCompact(r.datetime)}</span>
+                </div>
+                <div style="${grayStyle}">
+                    <span style="margin-right:12px">👤: <strong>${r.payer || '-'}</strong></span> 
+                    <span>📋: <strong>${r.owner || '-'}</strong></span> 
+                    <span>🏷️: ${r.tag || '-'}</span> 
+                    <span>💳: ${r.channel || '-'}</span> 
+                </div>
+                <div style="${grayStyle}white-space:normal;word-break:break-all;">备注: ${escapeHtml(r.note || "-")}</div>
+                <div class="btns" style="justify-content:flex-end;margin-top:4px">
+                    <button class="btn edit" onclick="restoreRecord('${r.id}')">恢复</button>
+                    <button class="btn del" onclick="purgeRecord('${r.id}')">彻底删除</button>
+                </div>
+            </div>
+        `;
+        const cb = div.querySelector(".list-check-trash");
+        cb.checked = selectedTrashIds.has(r.id); 
+        cb.onclick = (e) => {
+            e.stopPropagation();
+            selectedTrashIds.has(r.id) ? selectedTrashIds.delete(r.id) : selectedTrashIds.add(r.id);
+            updateTrashSelection();
+        };
+        container.appendChild(div);
+    });
+}
+
+
+function showTrashList111(){ 
+    document.getElementById("listControls").style.display='none';
+    document.getElementById("recordsContainer").style.display='none';
+    document.getElementById("paginationControls").style.display='none';
+    document.getElementById("trashContainer").style.display='block';
+    
+    selectedTrashIds.clear();
+    updateTrashSelection();
+
+    const trash = loadTrash();
+    document.getElementById("trashCount").textContent = trash.length;
+    const container = document.getElementById("trashRecordsContainer");
+    container.innerHTML = "";
+
+    if (trash.length === 0){
+        container.innerHTML = "<div class='small' style='text-align:center'>空空如也</div>";
+        return;
+    }
+
+    trash.forEach(r=>{
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.style.background = "#fff0f0";
+        div.innerHTML = `
+            <input type="checkbox" class="trash-check" data-id="${r.id}" style="width:20px;height:20px;flex-shrink:0;margin-right:8px">
+            <div style="flex-grow:1;font-size:14px">
+                 <strong>${r.currency} ${r.amount}</strong> - ${r.city} (${formatDateTimeCompact(r.datetime)}) <br>
+                 <span style="color:#666">${escapeHtml(r.note || '无备注')}</span>
+            </div>
+            <div class="btns">
+                <button class="btn edit" onclick="restoreRecord('${r.id}')">恢复</button>
+                <button class="btn del" onclick="purgeRecord('${r.id}')">彻底删除</button>
+            </div>
+        `;
+        const cb = div.querySelector(".trash-check");
+        cb.checked = selectedTrashIds.has(r.id); // Ensure checkbox state reflects set
+        cb.onclick = (e) => {
+            e.stopPropagation();
+            selectedTrashIds.has(r.id) ? selectedTrashIds.delete(r.id) : selectedTrashIds.add(r.id);
+            updateTrashSelection();
+        };
+        container.appendChild(div);
+    });
+}
+
+function updateTrashSelection(){
+    selectedTrashCountEl.textContent = selectedTrashIds.size;
+}
+
+function restoreRecord(id){
+    let trash = loadTrash();
+    const idx = trash.findIndex(r=>r.id===id);
+    if(idx===-1) return;
+    const r = trash.splice(idx,1)[0];
+    saveTrash(trash);
+    let list = loadRecords();
+    list.unshift(r);
+    saveRecords(list);
+    showTrashList(); drawCharts();
+    hopFeedback("已恢复");
+}
+
+function batchRestore(){
+    if (selectedTrashIds.size === 0) return hopFeedback("未选择记录");
+    let trash = loadTrash();
+    let list = loadRecords();
+    let count = 0;
+    
+    trash = trash.filter(r => {
+        if (selectedTrashIds.has(r.id)) {
+            list.unshift(r); count++; return false;
+        }
+        return true;
+    });
+    
+    saveTrash(trash); saveRecords(list);
+    selectedTrashIds.clear();
+    showTrashList(); drawCharts();
+    hopFeedback(`已恢复 ${count} 条`);
+}
+
+function purgeRecord(id){
+    if(!confirm("彻底删除无法恢复，确定吗？")) return;
+    let trash = loadTrash();
+    trash = trash.filter(r=>r.id!==id);
+    saveTrash(trash);
+    showTrashList();
+    hopFeedback("已彻底删除");
+}
+
+function clearTrash(){
+    if(!confirm("确定清空回收站吗？此操作不可逆。")) return;
+    localStorage.removeItem(TRASH_KEY);
+    showTrashList();
+    hopFeedback("回收站已清空");
+}
+
+/* ===========================
+   Stats Optimization (Single Pass)
+   ============================ */
+const weekStartDateEl = document.getElementById("weekStartDate");
+const statsFilterOwnerEl = document.getElementById("statsFilterOwner");
+statsFilterOwnerEl.addEventListener("change", drawCharts);
+
+function drawCharts(){
+    const list = loadRecords();
+    const ownerSet = new Set(["ZYR", "TL", "公共"]); 
+    list.forEach(r => r.owner && ownerSet.add(r.owner));
+    const currentSel = Array.from(statsFilterOwnerEl.options).filter(o=>o.selected).map(o=>o.value);
+    
+    // Optimization: Check for differences before re-populating the owner filter
+    const newOptions = Array.from(ownerSet).sort();
+    const existingOptions = Array.from(statsFilterOwnerEl.options).map(o=>o.value);
+    
+    if (newOptions.length !== existingOptions.length || newOptions.some((o, i) => o !== existingOptions[i])) { 
+        statsFilterOwnerEl.innerHTML = "";
+        newOptions.forEach(o => {
+            const opt = document.createElement("option");
+            opt.value = o; opt.textContent = o;
+            if (currentSel.includes(o)) opt.selected = true;
+            statsFilterOwnerEl.appendChild(opt);
+        });
+        // If owner options changed, try to restore selection, but we rely on currentSel for the new options.
+    }
+
+    const selectedOwners = Array.from(statsFilterOwnerEl.options).filter(o=>o.selected).map(o=>o.value);
+    
+    // 8) Single Pass Aggregation
+    const weekStart = weekStartDateEl.value ? new Date(weekStartDateEl.value) : new Date();
+    weekStart.setHours(0,0,0,0);
+    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate()+7);
+    
+    const aggregates = {
+        week: [0,0,0,0,0,0,0],
+        tag: {},
+        channel: {},
+        payer: {},
+        city: {}
+    };
+
+    list.forEach(r => {
+        // Ensure necessary fields exist for safe filtering/aggregation
+        const recordOwner = r.owner || "未指定所有人";
+        const recordChannel = r.channel || "未指定";
+        const recordPayer = r.payer || "未指定";
+        const recordCity = r.city || "未指定城市";
+        const recordTags = (r.tag||"").split('/').map(t=>t.trim()).filter(t=>t);
+        
+        if (selectedOwners.length > 0 && !selectedOwners.includes(recordOwner)) return;
+
+        const cny = convertToCNY(r.amount, r.currency);
+        
+        // Week
+        const d = new Date(r.datetime);
+        if (!isNaN(d) && d >= weekStart && d < weekEnd) {
+            // Day index: Sunday=0, Monday=1, ... Saturday=6
+            const dayOfWeek = d.getDay(); 
+            // Calculate day difference from weekStart for correct index, handling potential timezone/DST issues slightly better
+            const diffTime = Math.abs(d.getTime() - weekStart.getTime());
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Revert to using getDay() for simplicity with fixed 7-day array
+            if (d >= weekStart && d < weekEnd) {
+                // Determine the starting day of the weekStart (0=Sun, 1=Mon, ...)
+                const startDay = weekStart.getDay(); 
+                // Index is relative to the start day
+                let dayIdx = (d.getDay() - startDay + 7) % 7; 
+                
+                // Double check the difference in days to prevent issues if weekStart is not a Sunday
+                const daysSinceStart = Math.floor((d.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24));
+                if (daysSinceStart >= 0 && daysSinceStart < 7) {
+                    // Use daysSinceStart if it's within the 0-6 range, as this correctly maps
+                    // the record's date to the correct index relative to weekStart.
+                    // This is more robust than relying purely on getDay() relative math.
+                    aggregates.week[daysSinceStart] += cny;
+                }
+            }
+        }
+
+        // Tag (Split)
+        if (recordTags.length===0) recordTags.push("未分类");
+        const amtPerTag = cny / recordTags.length;
+        recordTags.forEach(t => aggregates.tag[t] = (aggregates.tag[t]||0) + amtPerTag);
+
+        // Others
+        aggregates.channel[recordChannel] = (aggregates.channel[recordChannel]||0) + cny;
+        aggregates.payer[recordPayer] = (aggregates.payer[recordPayer]||0) + cny;
+        aggregates.city[recordCity] = (aggregates.city[recordCity]||0) + cny;
+    });
+
+    // Draw Bar
+    const days = ["周日","周一","周二","周三","周四","周五","周六"];
+    const labels = [];
+    const startDay = weekStart.getDay(); // 0=Sun, 1=Mon, ...
+    for(let i=0; i<7; i++) {
+        labels.push(days[(startDay + i) % 7]);
+    }
+    drawBarChart(document.getElementById("barChart"), labels, aggregates.week);
+
+    // Draw Pies
+    drawPieChart(document.getElementById("categoryPieChart"), aggregates.tag, "未分类");
+    drawPieChart(document.getElementById("channelPieChart"), aggregates.channel, "未指定");
+    drawPieChart(document.getElementById("payerPieChart"), aggregates.payer, "未指定");
+    drawPieChart(document.getElementById("cityPieChart"), aggregates.city, "未指定城市");
+}
+
+// Chart Helpers (Reused essentially)
+function drawBarChart(canvas, labels, values){
+    const ctx = canvas.getContext("2d");
+    const dpi = window.devicePixelRatio||1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpi; canvas.height = rect.height * dpi;
+    ctx.scale(dpi,dpi);
+    
+    ctx.clearRect(0,0,rect.width,rect.height);
+    const max = Math.max(...values, 1);
+    const pad = 30;
+    const W = rect.width, H = rect.height;
+    
+    // Grid
+    ctx.strokeStyle = "#eee"; ctx.fillStyle="#888"; ctx.font="10px Arial";
+    // Draw 5 horizontal lines (0, 25%, 50%, 75%, 100%)
+    for(let i=0;i<=4;i++){
+        const y = pad + (H-2*pad)*(i/4);
+        ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W,y); ctx.stroke(); // Draw line across the chart area
+        ctx.fillText(Math.round(max*(1-i/4)), 0, y+4);
+    }
+    
+    // Bars
+    const bw = (W - pad - 10) / labels.length * 0.6; // 10 is padding on the right
+    const step = (W - pad) / labels.length; // Step size is total width / number of labels
+    
+    labels.forEach((l,i)=>{
+        const h = (H-2*pad) * (values[i]/max);
+        const x = pad + step*i + (step-bw)/2;
+        const y = H - pad - h;
+        
+        ctx.fillStyle = "#2b8cff";
+        ctx.fillRect(x, y, bw, h);
+        
+        ctx.fillStyle = "#333";
+        ctx.textAlign="center";
+        ctx.fillText(l, x+bw/2, H-10);
+        if(values[i]>0) ctx.fillText(Math.round(values[i]), x+bw/2, y-5);
+    });
+}
+
+function drawPieChart(canvas, data, defaultLabel = "未指定"){
+    const ctx = canvas.getContext("2d");
+    const dpi = window.devicePixelRatio||1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpi; canvas.height = rect.height * dpi;
+    ctx.scale(dpi,dpi);
+    
+    const entries = Object.entries(data).sort((a,b)=>b[1]-a[1]);
+    const total = entries.reduce((s,x)=>s+x[1],0);
+    const W = rect.width, H = rect.height;
+    const cx = W*0.25, cy = H/2, r = Math.min(W,H)/3;
+    
+    if(total===0) { 
+        ctx.clearRect(0,0,W,H); // Clear previous chart
+        ctx.fillStyle="#999"; 
+        ctx.textAlign="center";
+        ctx.fillText("无数据", W/2, H/2); 
+        return; 
+    }
+    
+    ctx.clearRect(0,0,W,H); // Clear previous chart
+    let start = -Math.PI/2;
+    const colors = ["#3498db","#e74c3c","#f1c40f","#2ecc71","#9b59b6","#34495e","#e67e22"];
+    
+    entries.forEach((e,i)=>{
+        const ang = (e[1]/total)*Math.PI*2;
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,start+ang);
+        ctx.fillStyle = colors[i%colors.length]; ctx.fill();
+        start += ang;
+    });
+    
+    // Legend
+    let ly = 20;
+    entries.forEach((e,i)=>{
+        if(ly > H-20) return;
+        const label = e[0] === "" ? defaultLabel : e[0]; // Handle empty string keys
+        ctx.fillStyle = colors[i%colors.length];
+        ctx.fillRect(cx+r+20, ly, 12, 12);
+        ctx.fillStyle = "#333"; ctx.textAlign="left";
+        ctx.fillText(`${label}: ${Math.round(e[1])} (${(e[1]/total*100).toFixed(0)}%)`, cx+r+36, ly+10);
+        ly+=20;
+    });
+}
+
+/* Export/Import (Standard) */
+function download(n,c){
+    const b = new Blob([c],{type:"text/plain;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href=URL.createObjectURL(b); a.download=n; a.click();
+}
+function exportJSON(){ download(`backup_${Date.now()}.json`, JSON.stringify(loadRecords(),null,2)); }
+function exportCSV(){
+    // Include all necessary fields for a robust export
+    const headers = ["id", "city", "currency", "amount", "payer", "channel", "owner", "datetime", "tag", "note"];
+    let csv = headers.join(",") + "\n";
+    csv += loadRecords().map(r => 
+        headers.map(h => {
+            let val = r[h] !== undefined && r[h] !== null ? r[h] : '';
+            // Escape double quotes and surround with double quotes for safety
+            if (typeof val === 'string') {
+                val = '"' + val.replace(/"/g, '""') + '"';
+            }
+            return val;
+        }).join(",")
+    ).join("\n");
+    download(`backup_${Date.now()}.csv`, csv);
+}
+function exportTXT(){
+    const list = loadRecords();
+    let txt = "--- 记账记录备份 ---\n";
+    list.forEach(r => {
+        txt += `\nID: ${r.id}\n日期: ${formatDateTimeCompact(r.datetime)}\n金额: ${r.currency} ${r.amount}\n城市: ${r.city || '-'}\n付款人: ${r.payer || '-'}\n渠道: ${r.channel || '-'}\n所有人: ${r.owner || '-'}\n标签: ${r.tag || '-'}\n备注: ${r.note || '无'}\n`;
+        txt += "----------------------\n";
+    });
+    download(`backup_${Date.now()}.txt`, txt);
+}
+
+// Import implementation simplified for brevity but functional
+function importJSON(){
+    const f = document.getElementById("jsonInput").files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = e => {
+        try {
+            const d = JSON.parse(e.target.result);
+            if(Array.isArray(d)) {
+                let l = loadRecords();
+                // Add unique ID if missing and merge
+                d.forEach(x => { 
+                    if(!x.id) x.id="i"+Date.now()+Math.random().toString(36).slice(2,7); 
+                    // Simple merge, relying on new ID to avoid immediate conflict.
+                    l.unshift(x); 
+                });
+                saveRecords(l); hopFeedback(`导入成功，新增 ${d.length} 条记录`); refreshList(); drawCharts();
+            } else {
+                 alert("JSON 格式错误：根元素不是数组");
+            }
+        } catch(e){ alert("格式错误或文件损坏"); }
+    };
+    r.readAsText(f);
+}
+// Placeholder for importCSV function (full implementation is complex due to parsing)
+function importCSV(){
+    alert("CSV 导入功能暂未实现，请使用 JSON 格式。");
+}
+
+
+/* Init */
+// MODIFICATION 4: Call init functions in order
+initDefaults();
+refreshList();
+drawCharts(); // Initial chart draw
+</script>
+</body>
+</html>

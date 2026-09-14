@@ -533,6 +533,8 @@ let CACHED_RATES = {};
 const CONFIG_KEY = "account_configs";
 // DEFAULT_CONFIG 的签名：源码改动时用于侦测并重同步
 const CONFIG_SIG_KEY = "account_config_sig";
+// 基准币种：固定 1:1，不出现在汇率配置中
+const BASE_CURRENCY = "人民币";
 
 // 初始默认配置，新增了 rates (汇率) 属性
 const DEFAULT_CONFIG = {
@@ -541,7 +543,7 @@ const DEFAULT_CONFIG = {
     channel: ["信用卡","现金","银行卡","微信","支付宝"],
     currency: ["美元","人民币"],
     owner: ["ZYR", "CG", "公共"],
-    rates: { "美元": 6.72} // 默认汇率
+    rates: { "美元": 6.89} // 默认汇率
 };
 
 // 对应的中文标题
@@ -608,11 +610,8 @@ function updateRateNote() {
     const r = CACHED_RATES;
     const noteElement = document.getElementById('exchange-rate-note');
     if (noteElement) {
-        // 严格按 DEFAULT_CONFIG.rates 的币种生成文字，值优先取运行时改过的 CACHED_RATES
-        const textArr = Object.keys(DEFAULT_CONFIG.rates).map(cur => {
-            const v = (r && r[cur] !== undefined) ? r[cur] : DEFAULT_CONFIG.rates[cur];
-            return `${cur} ${v}`;
-        });
+        // 列出当前所有已配置汇率的币种（含运行时新增的币种）
+        const textArr = Object.keys(r || {}).map(cur => `${cur} ${r[cur]}`);
         noteElement.textContent = `所有统计图的金额已统一折算为人民币 (CNY)。当前配置汇率: ${textArr.join(', ')}。`;
     }
 }
@@ -706,12 +705,18 @@ function renderSettings() {
     rateSection.style.paddingTop = "20px";
     
     let rateHtml = `<label>💰 汇率配置 (相对于人民币 CNY)</label>
-                    <p class="note">修改已有币种兑换人民币的比例。例如：填写 6.89，代表1该币种=6.89元人民币。仅显示源码 DEFAULT_CONFIG.rates 中定义的币种。</p>
+                    <p class="note">修改各币种兑换人民币的比例。例如：填写 6.89，代表1该币种=6.89元人民币。此处列出除人民币外的所有币种，新增币种会自动出现在这里。</p>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; background:var(--surface-2); padding:12px; border-radius:12px; border:1px solid var(--card-border);">`;
 
-    // 严格遍历 DEFAULT_CONFIG.rates：只显示源码中定义的币种，值优先取运行时改过的 conf.rates[cur]
-    for (let cur in DEFAULT_CONFIG.rates) {
-        const rateVal = (conf.rates && conf.rates[cur] !== undefined) ? conf.rates[cur] : DEFAULT_CONFIG.rates[cur];
+    // 汇率行跟随「币种」列表（人民币为基准，固定 1:1，不显示）：
+    // 新增币种会自动出现，删除的币种自动消失；值优先取运行时改过的 conf.rates[cur]。
+    const rateCurrencies = (conf.currency || []).filter(c => c && c !== BASE_CURRENCY);
+    if (rateCurrencies.length === 0) {
+        rateHtml += `<div class="note" style="grid-column:1/-1;margin:0;">暂无需配置汇率的币种。</div>`;
+    }
+    rateCurrencies.forEach(cur => {
+        const rateVal = (conf.rates && conf.rates[cur] !== undefined) ? conf.rates[cur]
+                        : (DEFAULT_CONFIG.rates[cur] !== undefined ? DEFAULT_CONFIG.rates[cur] : 1);
         rateHtml += `
             <div style="display:flex; flex-direction:column; gap:4px;">
                 <span style="font-size:13px; font-weight:600; color:var(--muted);">${escapeHtml(cur)}</span>
@@ -719,7 +724,7 @@ function renderSettings() {
                        onchange="updateRate('${escapeAttr(cur)}', this.value)"
                        style="margin-bottom:0; padding:8px; font-size:14px; text-align:center;">
             </div>`;
-    }
+    });
     rateHtml += `</div>`;
     rateSection.innerHTML = rateHtml;
     container.appendChild(rateSection);
@@ -748,7 +753,7 @@ function addConfigOption(key) {
     
     if (key === "currency") {
         setTimeout(() => {
-            alert("⚠️ 提示：您添加了新的币种。\n汇率配置区仅显示源码 DEFAULT_CONFIG.rates 中定义的币种，此新币种默认按 1:1 折算。\n如需自定义它的汇率，请在源码 DEFAULT_CONFIG.rates 中添加对应项。");
+            alert("⚠️ 提示：您添加了新的币种。\n为确保「数据统计」页面折算准确，请在下方的【汇率配置】中修改它对应的汇率，否则默认按 1:1 计算。");
         }, 100);
     }
 }
@@ -768,19 +773,24 @@ function removeConfigOption(key, val) {
     if (!confirm(`确定要移除选项 [${val}] 吗？\n(这不会影响以往记录)`)) return;
     const conf = loadConfig();
     conf[key] = conf[key].filter(item => item !== val);
-    
+
+    // 删除币种时，同步移除其汇率配置，保持汇率区与币种列表一致
+    if (key === "currency" && conf.rates && conf.rates[val] !== undefined) {
+        delete conf.rates[val];
+    }
+
     // 如果删除的是当前的默认选项，自动将列表里第一个剩余选项设为默认
     if (conf.defaults && conf.defaults[key] === val) {
         conf.defaults[key] = conf[key].length > 0 ? conf[key][0] : "";
     }
-    
+
     saveConfig(conf);
     hopFeedback("移除成功");
 }
 
 function convertToCNY(amount, currency){
     // 从已全局缓存的 CACHED_RATES 中直接提取
-    const rate = currency === "人民币" ? 1 : (CACHED_RATES[currency] || 1); 
+    const rate = currency === BASE_CURRENCY ? 1 : (CACHED_RATES[currency] || 1);
     return (Number(amount) || 0) * rate;
 }
 
@@ -1568,6 +1578,8 @@ function drawBarChart(canvas, labels, values){
     const { ctx, W, H } = setupCanvas(canvas);
     const th = chartTheme();
     ctx.clearRect(0,0,W,H);
+    // 画布不可见（隐藏的 Tab）尺寸为 0 时直接跳过，避免负数半径/宽度报错
+    if (W <= 60 || H <= 40) return;
     const max = Math.max(...values, 1);
     const pad = 30;
 
@@ -1591,10 +1603,11 @@ function drawBarChart(canvas, labels, values){
         grad.addColorStop(0, th.primary);
         grad.addColorStop(1, "rgba(74,163,255,0.55)");
         ctx.fillStyle = grad;
-        const rr = Math.min(6, bw/2);
+        const bwSafe = Math.max(bw, 0);
+        const rr = Math.max(0, Math.min(6, bwSafe/2));
         ctx.beginPath();
-        if (ctx.roundRect) ctx.roundRect(x, y, bw, Math.max(h,0.1), [rr,rr,0,0]);
-        else ctx.rect(x, y, bw, h);
+        if (ctx.roundRect) ctx.roundRect(x, y, bwSafe, Math.max(h,0.1), [rr,rr,0,0]);
+        else ctx.rect(x, y, bwSafe, h);
         ctx.fill();
 
         ctx.fillStyle = th.text;
@@ -1608,11 +1621,13 @@ function drawPieChart(canvas, data, defaultLabel = "未指定"){
     const { ctx, W, H } = setupCanvas(canvas);
     const th = chartTheme();
 
+    ctx.clearRect(0,0,W,H);
+    if (W <= 60 || H <= 40) return; // 隐藏 Tab / 尺寸为 0 时跳过
+
     const entries = Object.entries(data).sort((a,b)=>b[1]-a[1]);
     const total = entries.reduce((s,x)=>s+x[1],0);
     const cx = W*0.25, cy = H/2, r = Math.min(W,H)/3;
 
-    ctx.clearRect(0,0,W,H);
     if(total===0) {
         ctx.fillStyle = th.muted;
         ctx.textAlign="center";

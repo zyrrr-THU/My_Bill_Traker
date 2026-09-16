@@ -8,69 +8,88 @@
     /* ============================================================
        主题令牌 (Design Tokens) — light 为基准
        ============================================================ */
+    /* 极简精致卡片流 · 中性灰阶 + 单一克制强调色（靛蓝） */
     :root{
-        --bg:#eef1f8;
-        --bg-grad:radial-gradient(1200px 600px at 10% -10%, #dce9ff 0%, transparent 55%),
-                  radial-gradient(1000px 620px at 110% 0%, #e6dcff 0%, transparent 50%),
-                  linear-gradient(180deg,#f2f5fc 0%, #eef1f8 100%);
-        --card:rgba(255,255,255,0.72);
-        --card-solid:#ffffff;
-        --card-border:rgba(255,255,255,0.65);
-        --surface-2:rgba(255,255,255,0.55);
-        --surface-2-solid:#f4f6fc;
-        --input-border:rgba(120,135,175,0.28);
-        --text:#182338;
-        --text-muted:#6b7591;
-        --primary:#2b8cff;
-        --primary-2:#4aa3ff;
-        --primary-grad:linear-gradient(135deg,#2b8cff 0%, #4aa3ff 100%);
-        --accent:#22b573;
-        --accent-grad:linear-gradient(135deg,#22c07a 0%, #12a866 100%);
-        --danger:#ff5b6a;
-        --danger-grad:linear-gradient(135deg,#ff6b78 0%, #ff4a63 100%);
-        --warn:#f5a623;
-        --muted:#6b7591;                /* 兼容旧变量名 */
-        --ring:0 0 0 4px rgba(43,140,255,0.18);
-        --shadow-sm:0 2px 8px rgba(24,35,70,0.06);
-        --shadow-md:0 10px 26px rgba(24,35,70,0.10);
-        --shadow-lg:0 22px 60px rgba(24,35,70,0.20);
-        --radius:16px;
-        --radius-sm:11px;
+        --bg:#f4f5f7;
+        --bg-grad:none;
+        --surface:#ffffff;
+        --surface-2:#f2f4f7;      /* 输入 / 内嵌块 */
+        --border:rgba(17,24,39,0.09);
+        --border-strong:rgba(17,24,39,0.14);
+        --text:#181b22;           /* 一级 */
+        --text-2:#585f6d;         /* 二级 */
+        --text-3:#8b91a0;         /* 三级 */
+        --accent:#2f5fe0;
+        --accent-2:#5a80ef;
+        --accent-soft:#eaf0fe;
+        --danger:#e23b52;
+        --danger-soft:rgba(226,59,82,0.11);
+        --warn:#c8801f;
+        --ok:#0e9f6e;
+        --line2:#f1f2f5;                 /* 更淡的分隔线（行间） */
+        --num:'SF Mono',ui-monospace,"Menlo",Consolas,"Roboto Mono",monospace;
+        /* 分类色（图标/占比条） */
+        --c1:#e23b52; --c2:#2f5fe0; --c3:#0e9f6e; --c4:#c8801f; --c5:#8b5cf6; --c6:#14a8b8;
+        --nav-bg:rgba(255,255,255,0.86);
+        --ring:0 0 0 3px rgba(47,95,224,0.18);
+        --shadow-sm:0 1px 2px rgba(18,24,40,0.05), 0 1px 3px rgba(18,24,40,0.04);
+        --shadow-md:0 4px 16px rgba(18,24,40,0.08);
+        --shadow-lg:0 16px 48px rgba(18,24,40,0.18);
+        --r-lg:18px;
+        --r-md:13px;
+        --r-sm:9px;
+        --ease:cubic-bezier(.2,.8,.2,1);
+
+        /* —— 兼容旧变量名（内联样式 / chartTheme 依赖，勿删）—— */
+        --card:var(--surface);
+        --card-solid:var(--surface);
+        --card-border:var(--border);
+        --surface-2-solid:var(--surface-2);
+        --input-border:var(--border-strong);
+        --text-muted:var(--text-2);
+        --muted:var(--text-2);
+        --primary:var(--accent);
+        --radius:var(--r-lg);
+        --radius-sm:var(--r-md);
         --gap:12px;
     }
 
     @media (prefers-color-scheme: dark){
         :root{
-            --bg:#0e1220;
-            --bg-grad:radial-gradient(1200px 620px at 8% -12%, #17233f 0%, transparent 55%),
-                      radial-gradient(1000px 640px at 112% -4%, #241a44 0%, transparent 52%),
-                      linear-gradient(180deg,#111726 0%, #0d111d 100%);
-            --card:rgba(30,38,58,0.60);
-            --card-solid:#1a2136;
-            --card-border:rgba(255,255,255,0.08);
-            --surface-2:rgba(255,255,255,0.05);
-            --surface-2-solid:#222b42;
-            --input-border:rgba(255,255,255,0.12);
-            --text:#e8ecf6;
-            --text-muted:#9aa4c0;
-            --muted:#9aa4c0;
-            --card-solid:#1a2136;
-            --ring:0 0 0 4px rgba(74,163,255,0.22);
-            --shadow-sm:0 2px 8px rgba(0,0,0,0.30);
-            --shadow-md:0 12px 30px rgba(0,0,0,0.42);
-            --shadow-lg:0 24px 64px rgba(0,0,0,0.55);
+            --bg:#0c0e13;
+            --surface:#15181f;
+            --surface-2:#1d212b;
+            --border:rgba(255,255,255,0.08);
+            --border-strong:rgba(255,255,255,0.14);
+            --text:#e9ebf0;
+            --text-2:#a5acba;
+            --text-3:#6d7484;
+            --accent:#5b86f5;
+            --accent-2:#7ba0f8;
+            --accent-soft:rgba(91,134,245,0.16);
+            --danger:#f2515f;
+            --danger-soft:rgba(242,81,95,0.16);
+            --warn:#e0a54a;
+            --ok:#35c48a;
+            --line2:rgba(255,255,255,0.05);
+            --c1:#f2515f; --c2:#5b86f5; --c3:#35c48a; --c4:#e0a54a; --c5:#a78bfa; --c6:#3bc4d4;
+            --nav-bg:rgba(18,21,28,0.86);
+            --ring:0 0 0 3px rgba(91,134,245,0.28);
+            --shadow-sm:0 1px 2px rgba(0,0,0,0.4);
+            --shadow-md:0 6px 20px rgba(0,0,0,0.45);
+            --shadow-lg:0 18px 52px rgba(0,0,0,0.6);
         }
     }
 
     *{box-sizing:border-box}
+    [hidden]{display:none !important}
     body{
         margin:0;
         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif;
         background:var(--bg);
-        background-image:var(--bg-grad);
-        background-attachment:fixed;
         color:var(--text);
         -webkit-font-smoothing:antialiased;
+        text-rendering:optimizeLegibility;
         line-height:1.45;
         font-size:16px;
         min-height:100vh;
@@ -78,31 +97,30 @@
 
     header{
         position:sticky; top:0; z-index:50;
-        background:linear-gradient(135deg, rgba(43,140,255,0.92), rgba(74,163,255,0.86));
-        -webkit-backdrop-filter:saturate(160%) blur(14px);
-        backdrop-filter:saturate(160%) blur(14px);
-        color:#fff;
-        padding:18px 16px;
-        border-bottom:1px solid rgba(255,255,255,0.18);
-        box-shadow:0 8px 26px rgba(20,60,140,0.22);
+        background:var(--surface);
+        color:var(--text);
+        padding:14px 16px 13px;
+        border-bottom:1px solid var(--border);
     }
-    header h1{margin:0;font-size:20px;text-align:center;letter-spacing:.3px;text-shadow:0 1px 2px rgba(0,40,90,0.25)}
+    header h1{
+        margin:0 auto;max-width:860px;font-size:16.5px;font-weight:800;text-align:center;
+        letter-spacing:.2px;color:var(--text);
+        display:flex;align-items:center;justify-content:center;gap:7px;
+    }
+    header h1 .brand{font-size:12px;font-weight:600;color:var(--text-3)}
 
-    .wrap{max-width:900px;margin:16px auto;padding:0 14px}
+    .wrap{max-width:860px;margin:0 auto;padding:16px 16px 92px}
 
     .card{
-        background:var(--card);
-        -webkit-backdrop-filter:blur(16px) saturate(140%);
-        backdrop-filter:blur(16px) saturate(140%);
-        border:1px solid var(--card-border);
-        border-radius:var(--radius);
+        background:var(--surface);
+        border:1px solid var(--border);
+        border-radius:var(--r-lg);
         padding:16px;
-        box-shadow:var(--shadow-md);
+        box-shadow:var(--shadow-sm);
         margin-bottom:14px;
-        transition:box-shadow .25s ease, transform .25s ease;
     }
 
-    label{display:block;font-weight:600;margin-bottom:6px;color:var(--text)}
+    label{display:block;font-weight:600;font-size:13px;margin-bottom:6px;color:var(--text-2);letter-spacing:.1px}
 
     input,select,textarea,button{
         font-size:16px;padding:12px;border-radius:var(--radius-sm);
@@ -144,83 +162,110 @@
     .row .col{flex:1}
     .small{font-size:13px;color:var(--text-muted)}
 
-    /* 按钮统一微交互 */
-    button{cursor:pointer;font-weight:600;-webkit-tap-highlight-color:transparent}
-    button:active{transform:scale(.97)}
-    button.primary{background:var(--accent-grad);color:#fff;border:none;box-shadow:0 6px 16px rgba(18,168,102,0.28)}
-    button.primary:hover{filter:brightness(1.05);transform:translateY(-1px)}
-    button.ghost{background:var(--surface-2-solid);color:var(--primary);border:1px solid var(--primary)}
-    button.ghost:hover{background:rgba(43,140,255,0.08)}
-    button.export{background:var(--primary-grad);color:#fff;border:none;box-shadow:0 6px 16px rgba(43,140,255,0.28)}
-    button.export:hover{filter:brightness(1.05);transform:translateY(-1px)}
-    button.danger{background:var(--danger-grad);color:#fff;border:none;box-shadow:0 6px 16px rgba(255,91,106,0.26)}
-    button.danger:hover{filter:brightness(1.05);transform:translateY(-1px)}
+    /* 按钮统一微交互 —— 极简：主操作实色，次操作柔和 */
+    button{cursor:pointer;font-weight:600;-webkit-tap-highlight-color:transparent;letter-spacing:.2px;transition:background .18s var(--ease), filter .18s var(--ease), transform .1s var(--ease), border-color .18s var(--ease)}
+    button:active{transform:scale(.975)}
+    button.primary{background:var(--accent);color:#fff;border:none;box-shadow:var(--shadow-sm);font-weight:700;padding:14px}
+    button.primary:hover{filter:brightness(1.06)}
+    button.ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--border)}
+    button.ghost:hover{border-color:var(--border-strong);background:var(--surface)}
+    button.export{background:var(--accent);color:#fff;border:none;box-shadow:var(--shadow-sm)}
+    button.export:hover{filter:brightness(1.06)}
+    button.danger{background:var(--danger);color:#fff;border:none}
+    button.danger:hover{filter:brightness(1.06)}
 
-    .tabbar{display:flex;gap:8px;overflow:auto}
+    /* —— 主导航：底部固定（所有尺寸，仿 design-pro）—— */
+    .app-nav{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:100;margin:0}
+    .tabbar{
+        display:flex;gap:2px;max-width:600px;margin:0 auto;
+        background:var(--nav-bg);
+        border-top:1px solid var(--border);
+        -webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px);
+        padding:7px 8px calc(7px + env(safe-area-inset-bottom));
+        box-shadow:0 -4px 20px rgba(18,24,40,0.05);
+    }
     .tab{
-        flex:1;padding:11px 8px;text-align:center;border-radius:var(--radius-sm);
-        background:var(--surface-2-solid);
-        color:var(--text);
-        border:1px solid var(--input-border);cursor:pointer;
-        font-weight:700;line-height:1.25;
-        transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+        flex:1;min-width:0;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+        padding:6px 4px;border-radius:10px;
+        background:transparent;color:var(--text-3);border:none;cursor:pointer;
+        font-weight:600;line-height:1;
+        transition:color .2s var(--ease), transform .1s var(--ease);
     }
-    .tab:hover{transform:translateY(-1px)}
-    .tab:active{transform:scale(.96)}
-    .tab.active{
-        background:var(--primary-grad);color:#fff;border-color:transparent;
-        box-shadow:0 8px 20px rgba(43,140,255,0.34);
-    }
+    .tab .ico{font-size:19px;line-height:1;transition:transform .2s var(--ease)}
+    .tab .lbl{font-size:11px;font-weight:600;letter-spacing:.2px;white-space:nowrap}
+    .tab:active{transform:scale(.94)}
+    .tab.active{color:var(--accent)}
+    .tab.active .ico{transform:translateY(-1px) scale(1.1)}
 
+    /* —— 记录 / 回收站 列表卡 —— */
     .list-item{
-        border-radius:var(--radius-sm);padding:12px;
-        border:1px solid var(--card-border);
-        background:var(--surface-2-solid);
+        border-radius:var(--r-md);padding:13px 14px;
+        border:1px solid var(--border);
+        background:var(--surface);
         margin-bottom:10px;
-        display:flex;
-        justify-content:space-between;
-        align-items:flex-start;
-        gap:8px;
+        display:flex;align-items:flex-start;gap:10px;
         box-shadow:var(--shadow-sm);
-        transition:transform .18s ease, box-shadow .18s ease;
+        transition:transform .16s var(--ease), box-shadow .16s var(--ease), border-color .16s var(--ease);
     }
-    .list-item:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+    .list-item:hover{border-color:var(--border-strong);box-shadow:var(--shadow-md)}
+    .list-item .list-check,.list-item .list-check-trash{margin-top:3px}
+
+    /* 列表内部结构 */
+    .li-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+    .li-amt{font-size:18px;font-weight:750;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:.2px}
+    .li-amt .cur{font-size:12px;font-weight:600;color:var(--text-3);margin-right:3px}
+    .li-date{font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums;white-space:nowrap;flex-shrink:0}
+    .li-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .chip{
+        display:inline-flex;align-items:center;gap:4px;
+        padding:3px 9px;border-radius:20px;font-size:12px;line-height:1.5;
+        background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);
+        max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .chip.accent{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:600}
+    .li-note{font-size:12.5px;color:var(--text-3);margin-top:8px;line-height:1.5;white-space:normal;word-break:break-word}
+    .li-note.empty{display:none}
+
     .meta{color:var(--text-muted);font-size:13px;line-height:1.4;}
     .btns{display:flex;gap:8px; flex-shrink:0;}
-    .btn{padding:6px 12px;border-radius:9px;border:none;cursor:pointer;flex-grow:1;font-weight:600;transition:transform .12s ease, filter .18s ease;}
-    .btn:hover{filter:brightness(1.05)}
-    .btn:active{transform:scale(.96)}
-    .btn.edit{background:linear-gradient(135deg,#ffd35a,#ffbf3d);color:#5a4200}
-    .btn.del{background:var(--danger-grad);color:#fff}
+    .btn{width:auto;padding:7px 16px;border-radius:9px;border:1px solid transparent;cursor:pointer;flex:0 0 auto;font-size:13px;font-weight:600;margin-bottom:0;transition:filter .18s var(--ease),transform .1s var(--ease),background .18s var(--ease),border-color .18s var(--ease)}
+    .btn:active{transform:scale(.95)}
+    .btn.edit{background:var(--surface-2);color:var(--text-2);border-color:var(--border)}
+    .btn.edit:hover{border-color:var(--border-strong);color:var(--text)}
+    .btn.del{background:var(--danger-soft);color:var(--danger)}
+    .btn.del:hover{background:var(--danger);color:#fff}
 
     .stats-row{display:flex;gap:var(--gap);flex-wrap:wrap; justify-content:space-around;}
     .chart{
-        background:var(--surface-2-solid);border-radius:var(--radius-sm);padding:12px;
+        background:var(--surface-2);border-radius:var(--r-md);padding:14px;
         flex:1 1 300px;min-width:280px;
-        border:1px solid var(--card-border);
-        box-shadow:var(--shadow-sm);
+        border:1px solid var(--border);
     }
-    .note{font-size:13px;color:var(--text-muted);margin-top:6px}
-    footer{padding:14px 16px;text-align:center;color:var(--text-muted);font-size:13px}
+    .note{font-size:12.5px;color:var(--text-3);margin-top:6px;line-height:1.5}
+    footer{padding:18px 16px;text-align:center;color:var(--text-3);font-size:12px;line-height:1.6}
 
     .tag-cloud{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;margin-bottom:12px;}
     .tag-cloud-item{
-        padding:5px 11px;background:var(--surface-2-solid);color:var(--text);
-        border:1px solid var(--input-border);
-        border-radius:20px;font-size:13px;cursor:pointer;
-        transition:background-color .18s ease, transform .12s ease, border-color .18s ease;
+        padding:6px 12px;background:var(--surface-2);color:var(--text-2);
+        border:1px solid var(--border);
+        border-radius:20px;font-size:13px;cursor:pointer;font-weight:500;
+        transition:background-color .18s var(--ease), color .18s var(--ease), transform .1s var(--ease), border-color .18s var(--ease);
     }
-    .tag-cloud-item:hover{background:rgba(43,140,255,0.10);border-color:var(--primary);transform:translateY(-1px)}
-    .tag-cloud-item:active{transform:scale(.95)}
+    .tag-cloud-item:hover{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+    .tag-cloud-item:active{transform:scale(.94)}
 
     /* 筛选器区域 */
     .all-filters-row {
         display: flex; gap: 8px; flex-wrap: wrap; overflow-x: hidden; padding-bottom: 14px;
         border-bottom: 1px solid var(--card-border); margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px;
     }
-    .all-filters-row > * { margin-bottom: 0; padding: 8px 10px; flex-grow: 1; min-width: 130px; }
+    .all-filters-row > * { margin-bottom: 0; padding: 8px 10px; font-size:13px; width:auto; flex:1 1 128px; min-width: 118px; }
     .all-filters-row input[type="text"] { flex-basis: 100%; min-width: 100%; }
-    .all-filters-row input[type="date"] { max-width: 50%; flex-basis: 40%; min-width: 120px; }
+    .filter-dates{display:flex;gap:8px;flex:1 1 100%;margin:0;padding:0}
+    .filter-dates .fd{flex:1;display:flex;flex-direction:column;gap:3px;margin:0;padding:0;min-width:0}
+    .filter-dates .fd>span{font-size:11px;font-weight:600;color:var(--text-3)}
+    .filter-dates .fd input[type="date"]{margin:0;width:100%;padding:8px 10px;font-size:13px}
 
     /* 批处理/回收站组件布局 */
     #batchTrashControls {
@@ -268,41 +313,216 @@
         *{animation-duration:.001s !important;transition-duration:.001s !important}
     }
 
+    /* 吐司抬到底部导航之上 */
+    .hop-toast{bottom:calc(80px + env(safe-area-inset-bottom))}
+
     @media (max-width:600px){
-        header h1{font-size:18px}
         .row{flex-direction:column; margin-bottom:0;}
-        #form .row:nth-of-type(3) { flex-direction: column; }
         .stats-row{flex-direction:column; align-items:center;}
         .chart{min-width:100%;}
         input,select,textarea,button{ margin-bottom:12px; }
         .submit-actions{flex-direction:column;}
         .submit-actions button{margin-top:4px; width:100%;}
         #batchTrashControls { flex-direction: column; align-items: flex-start; width: 100%; }
-        .batch-controls-left, .batch-controls-right { width: 100%; margin-bottom: 8px; justify-content: flex-start; }
-        .batch-controls-right { justify-content: space-between; margin-top: 4px; margin-bottom: 0; }
+        .batch-controls-left { width: 100%; margin-bottom: 10px; justify-content: flex-start; }
+        .batch-controls-right { width: 100%; justify-content: space-between; margin:0; }
+        .batch-btn{flex:1}
         .all-filters-row input[type="date"] { flex-basis: calc(50% - 4px); }
+    }
+
+    /* ============================================================
+       专业账本 · 组件（数字优先 / 高密度 / 沉稳）
+       ============================================================ */
+    .tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+
+    /* 财务概览条（列表 / 统计 顶部） */
+    .overview{
+        display:flex;background:var(--surface);border:1px solid var(--border);
+        border-radius:var(--r-md);overflow:hidden;margin-bottom:12px;
+    }
+    .overview .ov-cell{flex:1;padding:12px 14px;border-right:1px solid var(--line2)}
+    .overview .ov-cell:last-child{border-right:none}
+    .overview .ov-k{font-size:11.5px;color:var(--text-3);font-weight:600}
+    .overview .ov-v{font-size:22px;font-weight:800;margin-top:3px;letter-spacing:-.4px;color:var(--text)}
+    .overview .ov-v .u{font-size:13px;color:var(--text-3);font-weight:700;margin-right:2px}
+    .overview .ov-sub{font-size:10.5px;color:var(--text-3);margin-top:2px}
+
+    /* 日期分组头 */
+    .date-group{
+        display:flex;justify-content:space-between;align-items:center;
+        padding:11px 4px 6px;margin-top:2px;
+    }
+    .date-group .dg-d{font-size:12.5px;font-weight:700;color:var(--text-2)}
+    .date-group .dg-s{font-size:12.5px;font-weight:800;color:var(--text)}
+
+    /* 记录行（紧凑、右对齐金额列） */
+    .rec-list{
+        background:var(--surface);border:1px solid var(--border);
+        border-radius:var(--r-md);overflow:hidden;margin-bottom:6px;
+    }
+    .rec-row{padding:11px 13px;border-bottom:1px solid var(--line2)}
+    .rec-row:last-child{border-bottom:none}
+    .rec-row.selected{background:var(--accent-soft)}
+    .rec-main{display:flex;align-items:center;gap:11px}
+    .rec-check{width:18px;height:18px;flex-shrink:0;margin:0}
+    .rec-dot{
+        width:34px;height:34px;border-radius:10px;flex-shrink:0;
+        display:flex;align-items:center;justify-content:center;font-size:16px;
+        background:var(--accent-soft);
+    }
+    .rec-info{flex:1;min-width:0}
+    .rec-info .rn{font-size:14px;font-weight:700;color:var(--text);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rec-info .rm{font-size:11.5px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rec-info .rm2{font-size:11.5px;color:var(--text-2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+    .rec-info .rnote{font-size:11px;color:var(--text-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic}
+    .rec-amt{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+    .rec-amt .ra{font-size:15.5px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.2px;white-space:nowrap}
+    .rec-amt .ra .u{font-size:10.5px;color:var(--text-3);font-weight:700;margin-right:1px}
+    .rec-amt .rcny{font-size:11px;color:var(--text-3);font-variant-numeric:tabular-nums;white-space:nowrap}
+    .rec-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:9px}
+    .rec-acts .mini{
+        width:auto;margin:0;flex:0 0 auto;min-width:76px;text-align:center;
+        font-size:12px;font-weight:600;padding:6px 16px;border-radius:8px;border:1px solid var(--border);
+        background:var(--surface-2);color:var(--text-2);cursor:pointer;line-height:1.4;
+    }
+    .rec-acts .mini:active{transform:scale(.95)}
+    .rec-acts .mini.del{color:var(--danger);border-color:transparent;background:var(--danger-soft)}
+    .rec-empty{text-align:center;padding:34px 10px;color:var(--text-3);font-size:13px}
+
+    /* 统计 · 占比条列表 */
+    .prop-list{margin-top:4px}
+    .prop-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+    .prop-row:last-child{margin-bottom:2px}
+    .prop-row .pn{font-size:12.5px;font-weight:600;color:var(--text);width:64px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .prop-row .ptrack{flex:1;height:8px;border-radius:6px;background:var(--surface-2);overflow:hidden}
+    .prop-row .pfill{height:100%;border-radius:6px}
+    .prop-row .pv{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--text);width:76px;text-align:right;flex-shrink:0}
+    .prop-row .pv .pct{color:var(--text-3);font-weight:600;font-size:10.5px;margin-left:2px}
+    .prop-empty{color:var(--text-3);font-size:12.5px;padding:8px 0}
+
+    /* 统计卡片 */
+    .stat-card{
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);
+        padding:14px 15px;margin-bottom:12px;
+    }
+    .stat-card .sc-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .stat-card .sc-h b{font-size:13.5px;font-weight:800;color:var(--text)}
+    .stat-card .sc-h .sc-tag{font-size:11px;color:var(--text-3);font-weight:600}
+
+    /* 记账页 · 金额主角（居中大号，仿 design-pro） */
+    .amount-hero{
+        position:relative;
+        background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);
+        padding:18px 16px 16px;margin-bottom:4px;text-align:center;
+    }
+    .amount-hero label{margin-bottom:2px;text-align:center;font-size:12px;color:var(--text-3)}
+    #amount{
+        border:none;background:transparent;font-size:38px;font-weight:800;letter-spacing:-1px;
+        font-variant-numeric:tabular-nums;padding:2px 0;margin:0;height:auto;text-align:center;
+    }
+    #amount:focus{box-shadow:none}
+    #amount::placeholder{color:var(--text-3);opacity:.5}
+    #amount::-webkit-outer-spin-button,#amount::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    #amount{-moz-appearance:textfield}
+    .amount-cur{
+        position:absolute;right:14px;bottom:14px;
+        font-size:12px;font-weight:700;color:var(--accent);
+        background:var(--accent-soft);padding:3px 10px;border-radius:16px;
+    }
+
+    /* 记录页 · 筛选栏（搜索 + 折叠筛选） */
+    .filter-bar{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+    .search-box{margin:0;flex:1}
+    .filter-toggle{
+        width:auto;flex:0 0 auto;margin:0;padding:11px 14px;
+        display:flex;align-items:center;gap:7px;white-space:nowrap;
+        background:var(--surface-2);color:var(--text);border:1px solid var(--border);
+        border-radius:var(--radius-sm);font-weight:600;font-size:14px;
+    }
+    .filter-toggle.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+    .filter-toggle .chev{font-size:11px;transition:transform .2s var(--ease)}
+    .filter-toggle.on .chev{transform:rotate(180deg)}
+    .filter-toggle .fbadge{
+        min-width:18px;height:18px;padding:0 5px;border-radius:9px;
+        background:var(--accent);color:#fff;font-size:11px;font-weight:700;
+        display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* 批量删除 / 回收站 按钮等高、文字居中 */
+    .batch-btn{width:auto;margin:0;padding:0 14px;height:38px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1}
+
+    /* 回收站头部按钮：统一高度 + 配色 */
+    .trash-btn{
+        width:auto;margin:0;height:36px;padding:0 14px;
+        display:inline-flex;align-items:center;justify-content:center;
+        font-size:13px;font-weight:600;border-radius:9px;border:1px solid transparent;cursor:pointer;
+    }
+    .trash-btn.t-primary{background:var(--accent);color:#fff}
+    .trash-btn.t-danger{background:var(--danger-soft);color:var(--danger)}
+    .trash-btn.t-ghost{background:var(--surface-2);color:var(--text-2);border-color:var(--border)}
+    .trash-btn:active{transform:scale(.96)}
+
+    /* 导入行：文件选择与导入按钮等高 */
+    .import-row{display:flex;gap:8px;align-items:stretch;margin-bottom:8px}
+    .import-row #jsonInput{margin:0;height:44px;display:flex;align-items:center;padding:0 12px;font-size:13px}
+    .import-row #jsonInput::-webkit-file-upload-button,.import-row #jsonInput::file-selector-button{
+        height:30px;margin-right:10px;padding:0 12px;border-radius:7px;border:1px solid var(--border);
+        background:var(--surface);color:var(--text-2);font-size:12px;font-weight:600;cursor:pointer;
+    }
+    .import-row .import-btn{flex:0 0 92px;margin:0;height:44px;padding:0 10px;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+
+    /* 统计对象选择 */
+    .stats-owner{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .stats-owner .so-label{font-size:13px;font-weight:600;color:var(--text-2);flex-shrink:0}
+    .stats-owner select{margin:0;flex:1;max-width:220px}
+
+    /* 设置页分区 */
+    .settings-section{margin-top:26px;padding-top:18px;border-top:1px solid var(--border)}
+
+    /* 手机端：记账表单保持一行两列 */
+    @media (max-width:600px){
+        #form .row{flex-direction:row !important;gap:8px;margin-bottom:0}
+        #form .row .col{min-width:0}
+        #form label{font-size:12px}
     }
 </style>
 </head>
 <body>
 <header>
-    <h1>📘 轻量记账（本地 PWA）</h1>
+    <h1><span id="appTitle">记一笔</span></h1>
 </header>
 
 <div class="wrap">
 
-    <div class="card">
+    <nav class="app-nav">
         <div class="tabbar" id="tabs">
-            <div class="tab active" data-tab="form">填写<br>账单</div>
-            <div class="tab" data-tab="list">查看<br>记录</div>
-            <div class="tab" data-tab="stats">数据<br>统计</div>
-            <div class="tab" data-tab="export">导出<br>导入</div>
-            <div class="tab" data-tab="settings">选项<br>设置</div>
+            <div class="tab active" data-tab="form"><span class="ico">✏️</span><span class="lbl">记账</span></div>
+            <div class="tab" data-tab="list"><span class="ico">📋</span><span class="lbl">记录</span></div>
+            <div class="tab" data-tab="stats"><span class="ico">📊</span><span class="lbl">统计</span></div>
+            <div class="tab" data-tab="settings"><span class="ico">⚙️</span><span class="lbl">设置</span></div>
         </div>
-    </div>
+    </nav>
 
     <div id="form" class="card">
         
+        <div class="amount-hero">
+            <label>💰 金额</label>
+            <input id="amount" type="number" placeholder="0.00" oninput="clearError(this)">
+            <div class="amount-cur" id="amountCur"></div>
+            <div class="error-msg" id="error-amount">请输入有效的金额</div>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+            <div class="col">
+                <label>💴 币种</label>
+                <select id="currency"></select>
+            </div>
+            <div class="col">
+                <label>💳 付款渠道</label>
+                <select id="channel"></select>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col">
                 <label>🏙️ 城市</label>
@@ -314,34 +534,18 @@
                 <div class="error-msg" id="error-datetime">请输入有效的日期和时间</div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col">
                 <label>👤 付款人</label>
                 <select id="payer"></select>
             </div>
             <div class="col">
-                <label>💳 付款渠道</label>
-                <select id="channel"></select>
-            </div>
-        </div>
-
-        <div class="row" style="--gap: 8px;"> 
-            <div class="col">
-                <label>💰 金额</label>
-                <input id="amount" type="number" placeholder="请输入金额" oninput="clearError(this)">
-                <div class="error-msg" id="error-amount">请输入有效的金额</div>
-            </div>
-            <div class="col">
-                <label>💴 币种</label>
-                <select id="currency"></select>
-            </div>
-            <div class="col">
                 <label>📋 账单所有人</label>
                 <select id="billOwner"></select>
             </div>
         </div>
-        
+
         <label>🏷️ 标签</label>
         <input id="tag" placeholder="例如：吃饭/交通/纪念品">
         <div class="tag-cloud" id="tagCloud">
@@ -358,48 +562,52 @@
     <div id="list" class="card" style="display:none">
         
         <div id="listControls">
-            
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <div><strong>所有记录</strong><div class="small">总条数：<span id="totalCount">0</span></div></div>
+
+            <div class="filter-bar">
+                <input id="search" type="text" placeholder="🔎 搜索备注 / 金额" class="search-box"/>
+                <button type="button" id="filterToggle" class="filter-toggle">
+                    <span>筛选</span><span id="filterBadge" class="fbadge" hidden>0</span>
+                    <span class="chev" id="filterChev">▾</span>
+                </button>
             </div>
 
-            <div id="allFilters" class="all-filters-row">
-                <input id="search" type="text" placeholder="🔎 搜索备注/金额" style="min-width:160px;"/>
-                
-                <select id="sortOrder" title="排序方式" style="background-color:#fff;">
-                    <option value="time_desc">📅 时间：新->旧</option>
-                    <option value="time_asc">📅 时间：旧->新</option>
-                    <option value="amount_desc">💰 金额：高->低 (CNY)</option>
-                    <option value="amount_asc">💰 金额：低->高 (CNY)</option>
+            <div id="allFilters" class="all-filters-row" hidden>
+                <select id="sortOrder" title="排序方式">
+                    <option value="time_desc">📅 时间：新→旧</option>
+                    <option value="time_asc">📅 时间：旧→新</option>
+                    <option value="amount_desc">💰 金额：高→低 (CNY)</option>
+                    <option value="amount_asc">💰 金额：低→高 (CNY)</option>
                 </select>
 
-                <input type="date" id="filterStartDate" title="开始日期"/>
-                <input type="date" id="filterEndDate" title="结束日期"/>
+                <div class="filter-dates">
+                    <label class="fd"><span>开始日期</span><input type="date" id="filterStartDate"/></label>
+                    <label class="fd"><span>结束日期</span><input type="date" id="filterEndDate"/></label>
+                </div>
                 <select id="filterTag"></select>
                 <select id="filterChannel"></select>
-                <select id="filterPayer"></select> 
+                <select id="filterPayer"></select>
                 <select id="filterCurrency"></select>
                 <select id="filterCity"></select>
-                <select id="filterOwner"></select> 
+                <select id="filterOwner"></select>
             </div>
 
             <div id="batchTrashControls">
                 <div class="batch-controls-left">
-                    <label for="pageSize" style="margin:0; font-weight:normal; font-size:14px; flex-shrink:0;">每页显示:</label>
-                    <select id="pageSize" style="width:70px; flex-grow:0; flex-shrink:0; margin:0; padding:6px 8px; font-size:14px;">
+                    <label for="pageSize" style="margin:0; font-weight:normal; font-size:13px; flex-shrink:0; color:var(--text-2);">每页</label>
+                    <select id="pageSize" style="width:72px; flex-grow:0; flex-shrink:0; margin:0; padding:7px 8px; font-size:13px;">
                         <option value="10">10条</option>
                         <option value="25">25条</option>
                         <option value="50">50条</option>
                         <option value="all">全部</option>
                     </select>
 
-                    <input type="checkbox" id="selectAllCheckbox" style="width:20px; height:20px; margin:0 0 0 8px; flex-grow:0;"/>
-                    <label for="selectAllCheckbox" style="margin:0; font-weight:normal; font-size:14px; flex-grow:1; flex-basis:0;">本页全选</label> 
+                    <input type="checkbox" id="selectAllCheckbox" style="width:18px; height:18px; margin:0 0 0 6px; flex-grow:0;"/>
+                    <label for="selectAllCheckbox" style="margin:0; font-weight:normal; font-size:13px; color:var(--text-2);">本页全选</label>
                 </div>
-                
+
                 <div class="batch-controls-right">
-                    <button class="btn del" id="batchDeleteBtn" style="padding:8px 12px;">🗑️ 批量删除 (<span id="selectedCount">0</span>)</button>
-                    <button class="ghost" id="openTrashBtn" style="padding:6px 10px;">♻️ 回收站</button>
+                    <button class="btn del batch-btn" id="batchDeleteBtn">🗑️ 删除 (<span id="selectedCount">0</span>)</button>
+                    <button class="ghost batch-btn" id="openTrashBtn">♻️ 回收站</button>
                 </div>
             </div>
         </div>
@@ -413,14 +621,14 @@
         <div id="recordsContainer"></div>
         
         <div id="trashContainer" style="display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eef2fb; padding-bottom:10px; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px; flex-wrap:wrap; gap:10px;">
                 <div>
                     <strong>回收站记录</strong> (<span id="trashCount">0</span> 条)
                 </div>
-                <div style="display:flex; gap:8px;">
-                    <button class="primary" id="batchRestoreBtn" style="padding:6px 10px;">批量恢复 (<span id="selectedTrashCount">0</span>)</button>
-                    <button class="btn del" id="clearTrashBtn" style="padding:6px 10px;">清空回收站</button>
-                    <button class="ghost" id="closeTrashBtn" style="padding:6px 10px;">返回列表</button>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="trash-btn t-primary" id="batchRestoreBtn">批量恢复 (<span id="selectedTrashCount">0</span>)</button>
+                    <button class="trash-btn t-danger" id="clearTrashBtn">清空全部</button>
+                    <button class="trash-btn t-ghost" id="closeTrashBtn">返回列表</button>
                 </div>
             </div>
             <div id="trashRecordsContainer"></div>
@@ -430,90 +638,77 @@
     </div>
 
     <div id="stats" class="card" style="display:none">
-        <strong>📊 统计</strong>
-        <div style="margin-top:8px;">
-            <label for="statsFilterOwner" style="font-weight:normal; margin-bottom:4px; font-size:14px;">统计对象 (账单所有人)</label>
-            <select id="statsFilterOwner" multiple>
-                </select>
+        <div class="stats-owner">
+            <span class="so-label">统计对象</span>
+            <select id="statsOwner"></select>
         </div>
-        <div class="stats-row" style="margin-top:12px">
-            <div class="chart" style="flex: 0 0 100%;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                    <div><strong>按周每日总额 (CNY)</strong></div>
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <input type="date" id="weekStartDate" onchange="drawCharts()" style="width:auto; max-width:140px; padding:6px 8px; margin:0;"/>
-                    </div>
-                </div>
-                <canvas id="barChart" width="600" height="260" style="width:100%;height:200px"></canvas>
+        <div class="overview">
+            <div class="ov-cell">
+                <div class="ov-k">总支出 (CNY)</div>
+                <div class="ov-v"><span class="u">¥</span><span id="statTotal" class="tnum">0</span></div>
+                <div class="ov-sub">共 <span id="statCount">0</span> 笔</div>
             </div>
-            
-            <div class="chart" style="flex: 0 0 100%;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                    <div><strong>按标签/类别分布 (CNY)</strong></div>
-                </div>
-                <canvas id="categoryPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
+            <div class="ov-cell">
+                <div class="ov-k">日均 (CNY)</div>
+                <div class="ov-v"><span class="u">¥</span><span id="statDailyAvg" class="tnum">0</span></div>
+                <div class="ov-sub"><span id="statDayCount">0</span> 天</div>
             </div>
+        </div>
 
-            <div class="chart" style="flex: 0 0 100%;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                    <div><strong>按付款渠道分布 (CNY)</strong></div>
-                </div>
-                <canvas id="channelPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
+        <div class="stat-card">
+            <div class="sc-h">
+                <b>按周每日总额</b>
+                <input type="date" id="weekStartDate" onchange="drawCharts()" style="width:auto; max-width:150px; padding:6px 8px; margin:0; font-size:13px;"/>
             </div>
+            <canvas id="barChart" width="600" height="240" style="width:100%;height:180px"></canvas>
+        </div>
 
-            <div class="chart" style="flex: 0 0 100%;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                    <div><strong>按付款人分布 (CNY)</strong></div>
-                </div>
-                <canvas id="payerPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
-            </div>
-
-            <div class="chart" style="flex: 0 0 100%;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                    <div><strong>按城市分布 (CNY)</strong></div>
-                </div>
-                <canvas id="cityPieChart" width="400" height="260" style="width:100%;height:200px"></canvas>
-            </div>
+        <div class="stat-card">
+            <div class="sc-h"><b>按账单所有人分布</b><span class="sc-tag">CNY · 占比</span></div>
+            <div id="ownerBars" class="prop-list"></div>
+        </div>
+        <div class="stat-card">
+            <div class="sc-h"><b>按城市分布</b><span class="sc-tag">CNY · 占比</span></div>
+            <div id="cityBars" class="prop-list"></div>
+        </div>
+        <div class="stat-card">
+            <div class="sc-h"><b>按标签 / 类别分布</b><span class="sc-tag">CNY · 占比</span></div>
+            <div id="tagBars" class="prop-list"></div>
         </div>
         <p id="exchange-rate-note" class="note"></p>
     </div>
 
-    <div id="export" class="card" style="display:none">
-        <strong>📤 导出数据</strong>
-        <div style="display:flex;gap:8px;margin-top:10px" class="export-actions">
-            <button class="export" onclick="exportJSON()">导出 JSON</button>
-            <button class="export" onclick="exportCSV()">导出 CSV</button>
-        </div>
-
-        <div style="margin-top:20px;">
-            <strong>📥 导入数据</strong>
-            <p class="note" style="margin-bottom:8px;">导入功能只会**增补**数据，不会覆盖或删除现有记录。重复数据会通过新ID保留。</p>
-            <div style="display:flex;gap:8px; align-items:center; margin-bottom:8px">
-                <input type="file" id="jsonInput" accept=".json" style="flex:1"/>
-                <button class="primary" onclick="importJSON()" style="flex:0 0 90px;">导入 JSON</button>
-            </div>
-        </div>
-
-        <div style="margin-top:10px">
-            <button class="ghost" id="promptInstallBtn" style="display:none">安装到手机桌面</button>
-        </div>
-    </div> 
-    
     <div id="settings" class="card" style="display:none">
         <div style="display:flex; justify-content:space-between; align-items:center;">
             <strong>⚙️ 选项配置管理</strong>
             <button class="ghost" style="width:auto; padding:6px 12px; margin:0; font-size:13px;" onclick="resetConfig()">🔄 恢复默认</button>
         </div>
-        <p class="note" style="margin-bottom: 12px; margin-top: 12px;">在此添加或删除表单下拉选项。删除或重置这里的选项不会影响已有的历史记录。</p>
+        <p class="note" style="margin-bottom: 12px; margin-top: 12px;">在此添加或删除表单下拉选项与常用标签。删除或重置这里的选项不会影响已有的历史记录。</p>
         <div id="settingsContainer">
         </div>
+
+        <div class="settings-section">
+            <strong>📤 数据导出 / 导入</strong>
+            <div style="display:flex;gap:8px;margin-top:10px" class="export-actions">
+                <button class="export" onclick="exportJSON()">导出 JSON</button>
+                <button class="export" onclick="exportCSV()">导出 CSV</button>
+            </div>
+            <p class="note" style="margin-bottom:8px;margin-top:12px;">导入只会 <b>增补</b> 数据，不会覆盖或删除现有记录；重复数据会通过新 ID 保留。</p>
+            <div class="import-row">
+                <input type="file" id="jsonInput" accept=".json" style="flex:1"/>
+                <button class="primary import-btn" onclick="importJSON()">导入 JSON</button>
+            </div>
+            <div style="margin-top:10px">
+                <button class="ghost" id="promptInstallBtn" style="display:none">安装到手机桌面</button>
+            </div>
+        </div>
+
+        <p class="note" style="text-align:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);">
+            🔒 数据保存在浏览器本地，无需联网，不设云端同步，确保物理隔离级的隐私安全。
+        </p>
     </div>
 
 </div>
-
-<footer class="card" style="text-align:center">
-    🔒 数据保存在浏览器本地，无需联网，不设云端同步，确保物理隔离级的隐私安全。
-</footer>
 
 <script>
 /* ===========================
@@ -543,6 +738,7 @@ const DEFAULT_CONFIG = {
     channel: ["信用卡","现金","银行卡","微信","支付宝"],
     currency: ["美元","人民币"],
     owner: ["ZYR", "CG", "公共"],
+    commonTags: ["吃饭", "交通", "门票", "住宿", "超市", "纪念品", "娱乐", "零食", "咖啡", "衣服", "物资", "签证"],
     rates: { "美元": 6.89} // 默认汇率
 };
 
@@ -552,12 +748,14 @@ const CONFIG_LABELS = {
     payer: "👤 付款人",
     channel: "💳 付款渠道",
     currency: "💴 币种",
-    owner: "📋 账单所有人"
+    owner: "📋 账单所有人",
+    commonTags: "🏷️ 常用标签"
 };
 
 // 加载配置
-// DEFAULT_CONFIG 的签名（源码内容的指纹）
-function defaultConfigSignature(){ return JSON.stringify(DEFAULT_CONFIG); }
+// DEFAULT_CONFIG 的签名（源码内容的指纹）——常量，模块加载时计算一次
+const DEFAULT_CONFIG_SIG = JSON.stringify(DEFAULT_CONFIG);
+function defaultConfigSignature(){ return DEFAULT_CONFIG_SIG; }
 
 function loadConfig() {
     try {
@@ -602,6 +800,7 @@ function saveConfig(conf) {
     safeSetItem(CONFIG_KEY, JSON.stringify(conf));
     CACHED_RATES = conf.rates || {};
     renderFormSelects(); // 更新表单的下拉框
+    if (typeof initTagCloud === "function" && typeof tagCloudEl !== "undefined" && tagCloudEl) initTagCloud(); // 常用标签联动记账页
     renderSettings();    // 刷新设置视图
 }
 
@@ -626,7 +825,7 @@ function updateRate(currency, newVal) {
     saveConfig(conf);
     hopFeedback(`${currency} 汇率已更新`);
     updateRateNote(); // 同步刷新图表底部的提示文字
-    drawCharts();     // 汇率改变后，重绘所有图表以应用新汇率
+    refreshCharts();  // 汇率改变后，若统计页可见则重绘以应用新汇率
 }
 
 // 动态渲染“填写账单”页面的 <select> 选项
@@ -853,6 +1052,8 @@ function initDefaults(){
     if (defs.channel && channelEl.querySelector(`option[value="${defs.channel}"]`)) channelEl.value = defs.channel;
     if (defs.currency && currencyEl.querySelector(`option[value="${defs.currency}"]`)) currencyEl.value = defs.currency;
     if (defs.owner && billOwnerEl.querySelector(`option[value="${defs.owner}"]`)) billOwnerEl.value = defs.owner;
+
+    if (typeof updateAmountCur === "function") updateAmountCur();
 }
 
 /* Error Handling (Inline) */
@@ -868,8 +1069,10 @@ function clearError(el) {
 
 /* Tag Cloud */
 function initTagCloud(){
-    tagCloudEl.innerHTML = ""; 
-    COMMON_TAGS.forEach(tag => {
+    tagCloudEl.innerHTML = "";
+    const conf = loadConfig();
+    const tags = (conf.commonTags && conf.commonTags.length) ? conf.commonTags : COMMON_TAGS;
+    tags.forEach(tag => {
         const span = document.createElement("span");
         span.className = "tag-cloud-item";
         span.textContent = tag;
@@ -944,8 +1147,9 @@ function saveNewRecord(record, currentList = null) {
     hopFeedback("已保存");
     amountEl.value=""; noteEl.value=""; tagEl.value=""; 
     initDefaults();
+    filterOptionsDirty = true;
     refreshList();
-    drawCharts();
+    refreshCharts();
 }
 
 function showDuplicateModal(oldRec, newRec) {
@@ -957,7 +1161,7 @@ function showDuplicateModal(oldRec, newRec) {
             <p style="font-size:14px; color:var(--text-muted);">您输入的记录（<strong>${escapeHtml(newRec.currency)}${escapeHtml(newRec.amount)}</strong> - ${escapeHtml(newRec.city)} - ${escapeHtml(newRec.payer)}）与现有记录（ID: ${escapeHtml(oldRec.id)}）完全一致。</p>
             <div class="custom-modal-btns">
                 <button class="ghost" id="cancelDup">取消</button>
-                <button class="primary" id="keepBothDup" style="background:#f39c12; border:none;">保留两者</button>
+                <button class="primary" id="keepBothDup" style="background:var(--warn); border:none;">保留两者</button>
                 <button class="danger" id="overwriteDup">覆盖旧记录</button>
             </div>
         </div>
@@ -981,8 +1185,9 @@ function showDuplicateModal(oldRec, newRec) {
             hopFeedback("已覆盖旧记录");
             amountEl.value=""; noteEl.value=""; tagEl.value="";
             initDefaults();
+            filterOptionsDirty = true;
             refreshList();
-            drawCharts();
+            refreshCharts();
         }
         overlay.remove();
     };
@@ -1014,15 +1219,20 @@ document.getElementById("tabs").addEventListener("click", (e)=>{
 });
 
 function showTab(name){
-    ["form","list","stats","export","settings"].forEach(id=>{
+    ["form","list","stats","settings"].forEach(id=>{
         document.getElementById(id).style.display = (id===name) ? "block":"none";
     });
-    if (name==="list") showRecordsList(); 
-    if (name==="stats") { 
+    const titles = {form:"记一笔", list:"记录", stats:"统计", settings:"设置"};
+    const tt = document.getElementById("appTitle");
+    if (tt && titles[name]) tt.textContent = titles[name];
+    window.scrollTo(0, 0);
+    if (name==="list") showRecordsList();
+    if (name==="stats") {
         if (!document.getElementById("weekStartDate").value) {
             document.getElementById("weekStartDate").value = new Date().toISOString().substring(0, 10);
         }
-        drawCharts(); 
+        drawCharts();
+        requestAnimationFrame(drawCharts); // 首次显示后按真实尺寸重绘，避免画布空白
     }
     if (name==="settings") renderSettings();
 }
@@ -1036,9 +1246,13 @@ const sortOrderEl = document.getElementById("sortOrder");
 const batchRestoreBtn = document.getElementById("batchRestoreBtn");
 const selectedTrashCountEl = document.getElementById("selectedTrashCount");
 
-let selectedIds = new Set(); 
-let selectedTrashIds = new Set(); 
-let currentPage = 1; 
+let selectedIds = new Set();
+let selectedTrashIds = new Set();
+let currentPage = 1;
+// 筛选下拉可选项是否需要重建：仅在记录集合变化时置 true，视图类刷新不重建
+let filterOptionsDirty = true;
+// 记录发生增删改导入恢复后统一调用：标记筛选项需重建 + 按需重绘图表
+function markRecordsChanged(){ filterOptionsDirty = true; refreshCharts(); }
 
 document.getElementById("pageSize").addEventListener("change", ()=> { currentPage=1; refreshList(); }); 
 document.getElementById("prevPageBtn").addEventListener("click", ()=> { currentPage--; refreshList(); });
@@ -1064,9 +1278,36 @@ document.getElementById("selectAllCheckbox").addEventListener("change", toggleSe
 document.getElementById("batchDeleteBtn").addEventListener("click", batchDelete); 
 batchRestoreBtn.addEventListener("click", batchRestore);
 
-document.getElementById("openTrashBtn").addEventListener("click", showTrashList); 
-document.getElementById("closeTrashBtn").addEventListener("click", showRecordsList); 
-document.getElementById("clearTrashBtn").addEventListener("click", clearTrash); 
+document.getElementById("openTrashBtn").addEventListener("click", showTrashList);
+document.getElementById("closeTrashBtn").addEventListener("click", showRecordsList);
+document.getElementById("clearTrashBtn").addEventListener("click", clearTrash);
+
+/* 折叠筛选面板 + 活动筛选数量徽标 */
+const filterToggleBtn = document.getElementById("filterToggle");
+const allFiltersEl = document.getElementById("allFilters");
+filterToggleBtn.addEventListener("click", ()=>{
+    const willShow = allFiltersEl.hidden;
+    allFiltersEl.hidden = !willShow;
+    filterToggleBtn.classList.toggle("on", willShow);
+});
+function updateFilterBadge(){
+    const ids = ["filterStartDate","filterEndDate","filterTag","filterChannel","filterPayer","filterCurrency","filterCity","filterOwner"];
+    const n = ids.reduce((c,id)=>{ const el=document.getElementById(id); return c + (el && el.value ? 1 : 0); }, 0);
+    const badge = document.getElementById("filterBadge");
+    badge.textContent = n;
+    badge.hidden = (n === 0);
+    filterToggleBtn.classList.toggle("on", n > 0 || !allFiltersEl.hidden);
+}
+["filterStartDate","filterEndDate","filterTag","filterChannel","filterPayer","filterCurrency","filterCity","filterOwner"]
+    .forEach(id => document.getElementById(id).addEventListener("change", updateFilterBadge));
+
+/* 金额区联动显示币种 */
+function updateAmountCur(){
+    const el = document.getElementById("amountCur");
+    const cur = document.getElementById("currency");
+    if (el && cur) el.textContent = cur.value || "";
+}
+document.getElementById("currency").addEventListener("change", updateAmountCur);
 
 function populateFilterOptions(preloaded){
     const list = preloaded || loadRecords();
@@ -1124,7 +1365,17 @@ function applyFilters(list){
             if (filters.start && rd < filters.start) return false;
             if (filters.end && rd > filters.end) return false;
         }
-        if (q && !Object.values(r).join(' ').toLowerCase().includes(q)) return false;
+        if (q) {
+            // 纯数字查询：按原始金额“精准”匹配（6 只匹配 6 / 6.0，不匹配 1.6、6.6）
+            if (/^\d+(\.\d+)?$/.test(q)) {
+                if (Number(r.amount) !== Number(q)) return false;
+            } else {
+                // 文本查询：在备注/城市/币种/付款人/渠道/所有人/标签中做子串匹配
+                const hay = [r.city, r.currency, r.payer, r.channel, r.owner, r.tag, r.note]
+                    .join(' ').toLowerCase();
+                if (!hay.includes(q)) return false;
+            }
+        }
         return true;
     });
 }
@@ -1142,19 +1393,25 @@ let currentDisplayRecords = [];
 
 function refreshList(){
     let list = loadRecords();
-    populateFilterOptions(list);
+    // 筛选下拉仅在记录集合变化时重建，避免每次搜索/翻页/排序都全量重扫
+    if (filterOptionsDirty) {
+        populateFilterOptions(list);
+        filterOptionsDirty = false;
+    }
 
     const sortType = sortOrderEl.value;
-    list.sort((a, b) => {
-        if (sortType === 'time_asc') return new Date(a.datetime) - new Date(b.datetime);
-        if (sortType === 'time_desc') return new Date(b.datetime) - new Date(a.datetime);
-        if (sortType === 'amount_asc') return convertToCNY(a.amount, a.currency) - convertToCNY(b.amount, b.currency);
-        if (sortType === 'amount_desc') return convertToCNY(b.amount, b.currency) - convertToCNY(a.amount, a.currency);
-        return 0;
-    });
-    
+    if (sortType === 'time_asc' || sortType === 'time_desc') {
+        const dir = sortType === 'time_asc' ? 1 : -1;
+        list.sort((a, b) => (new Date(a.datetime) - new Date(b.datetime)) * dir);
+    } else if (sortType === 'amount_asc' || sortType === 'amount_desc') {
+        // 装饰-排序：每条记录只换算一次 CNY，避免比较器内重复调用 convertToCNY
+        const dir = sortType === 'amount_asc' ? 1 : -1;
+        list.forEach(r => { r.__cny = convertToCNY(r.amount, r.currency); });
+        list.sort((a, b) => (a.__cny - b.__cny) * dir);
+        list.forEach(r => { delete r.__cny; });
+    }
+
     const filtered = applyFilters(list);
-    totalCountEl.textContent = filtered.length;
     recordsContainer.innerHTML = "";
     
     const perPageVal = document.getElementById("pageSize").value;
@@ -1172,49 +1429,122 @@ function refreshList(){
     document.getElementById("pageInfo").textContent = `第 ${currentPage} / ${totalPages} 页`;
 
     if (currentDisplayRecords.length === 0){
-        recordsContainer.innerHTML = "<div class='small' style='text-align:center;padding:20px'>暂无记录</div>";
+        recordsContainer.innerHTML = "<div class='rec-empty'>暂无记录</div>";
         updateSelectionState();
         return;
     }
 
-    const grayStyle = `color: var(--muted); font-size: 13px; line-height: 1.4;`;
     const frag = document.createDocumentFragment();
+    const timeSorted = (sortType === 'time_asc' || sortType === 'time_desc');
 
-    currentDisplayRecords.forEach(r=>{
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML = `
-            <input type="checkbox" class="list-check" data-id="${r.id}" style="width:20px;height:20px;flex-shrink:0;margin-right:8px">
-            <div style="flex-grow:1;display:flex;flex-direction:column;gap:4px">
-                <div style="display:flex;justify-content:space-between;font-weight:600;color:var(--text);font-size:16px;">
-                    <span style="min-width:90px">${escapeHtml(r.currency)} ${escapeHtml(r.amount)}</span>
-                    <span style="max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(r.city || '-')}</span>
-                    <span style="font-size:14px">${escapeHtml(formatDateTimeCompact(r.datetime))}</span>
-                </div>
-                <div style="${grayStyle}">
-                    <span style="margin-right:12px">👤: <strong>${escapeHtml(r.payer)}</strong></span>
-                    <span>📋: <strong>${escapeHtml(r.owner)}</strong></span>
-                    <span>🏷️: ${escapeHtml(r.tag || '-')}</span>
-                    <span>💳: ${escapeHtml(r.channel || '-')}</span>
-                </div>
-                <div style="${grayStyle}white-space:normal;word-break:break-all;">备注: ${escapeHtml(r.note || "-")}</div>
-                <div class="btns" style="justify-content:flex-end;margin-top:4px">
-                    <button class="btn edit" onclick="openEditModal('${r.id}')">编辑</button>
-                    <button class="btn del" onclick="deleteRecord('${r.id}')">删除</button>
-                </div>
-            </div>
-        `;
-        const cb = div.querySelector(".list-check");
+    const wireRow = (row, r) => {
+        const cb = row.querySelector(".list-check");
         cb.checked = selectedIds.has(r.id);
+        if (cb.checked) row.classList.add('selected');
         cb.onclick = (e) => {
             e.stopPropagation();
-            selectedIds.has(r.id) ? selectedIds.delete(r.id) : selectedIds.add(r.id);
+            if (selectedIds.has(r.id)) { selectedIds.delete(r.id); row.classList.remove('selected'); }
+            else { selectedIds.add(r.id); row.classList.add('selected'); }
             updateSelectionState();
         };
-        frag.appendChild(div);
-    });
+    };
+    const makeRow = (r) => {
+        const row = document.createElement("div");
+        row.className = "rec-row";
+        row.innerHTML = recRowInner(r, "list-check", `
+            <button class="mini" onclick="openEditModal('${r.id}')">编辑</button>
+            <button class="mini del" onclick="deleteRecord('${r.id}')">删除</button>`);
+        wireRow(row, r);
+        return row;
+    };
+
+    if (timeSorted){
+        // 按日期分组 + 当日小计（本页内）
+        let curDate = null, listEl = null;
+        currentDisplayRecords.forEach(r=>{
+            const d = (r.datetime||'').substring(0,10) || '未知日期';
+            if (d !== curDate){
+                curDate = d;
+                const daySum = currentDisplayRecords
+                    .filter(x => (((x.datetime||'').substring(0,10)) || '未知日期') === d)
+                    .reduce((s,x)=> s + convertToCNY(x.amount, x.currency), 0);
+                const gh = document.createElement('div');
+                gh.className = 'date-group';
+                gh.innerHTML = `<span class="dg-d">${escapeHtml(fmtDateHeader(d))}</span><span class="dg-s tnum">¥${fmtInt(daySum)}</span>`;
+                frag.appendChild(gh);
+                listEl = document.createElement('div');
+                listEl.className = 'rec-list';
+                frag.appendChild(listEl);
+            }
+            listEl.appendChild(makeRow(r));
+        });
+    } else {
+        const listEl = document.createElement('div');
+        listEl.className = 'rec-list';
+        currentDisplayRecords.forEach(r=> listEl.appendChild(makeRow(r)));
+        frag.appendChild(listEl);
+    }
     recordsContainer.appendChild(frag);
     updateSelectionState();
+}
+
+/* 数字格式化 */
+function fmtInt(n){ return Math.round(Number(n)||0).toLocaleString('zh-CN'); }
+function fmt2(n){ return (Math.round((Number(n)||0)*100)/100).toLocaleString('zh-CN',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function fmtDateHeader(d){
+    const dt = new Date(d + 'T00:00:00');
+    if (isNaN(dt)) return d;
+    const w = ['周日','周一','周二','周三','周四','周五','周六'][dt.getDay()];
+    return `${dt.getMonth()+1}月${dt.getDate()}日 ${w}`;
+}
+
+/* 记录分类图标/配色（依据标签关键词） */
+function recCategory(r){
+    const t = (r.tag||'').split('/').map(s=>s.trim()).filter(Boolean)[0] || '';
+    const map = [
+        [/(吃饭|餐|饭|food|lunch|dinner|breakfast)/i,'🍜','var(--c1)'],
+        [/(咖啡|coffee|奶茶|茶)/i,'☕','var(--c4)'],
+        [/(交通|地铁|打车|公交|车费|机票|火车|高铁|transport|taxi)/i,'🚇','var(--c3)'],
+        [/(超市|购物|buy|shopping|market)/i,'🛒','var(--c2)'],
+        [/(住宿|酒店|房租|hotel|rent|airbnb)/i,'🏨','var(--c5)'],
+        [/(门票|娱乐|电影|游戏|景点|ticket)/i,'🎫','var(--c6)'],
+        [/(纪念品|礼物|gift|souvenir)/i,'🎁','var(--c2)'],
+        [/(衣服|服装|clothes|鞋)/i,'👕','var(--c5)'],
+        [/(零食|snack)/i,'🍫','var(--c4)'],
+        [/(签证|visa|证件)/i,'📄','var(--c6)'],
+        [/(物资|日用|生活)/i,'📦','var(--c3)']
+    ];
+    for (const [re, ic, co] of map){ if (re.test(t)) return {icon:ic, color:co}; }
+    const palette = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)'];
+    let h = 0; for (let i=0;i<t.length;i++) h = (h*31 + t.charCodeAt(i)) >>> 0;
+    return { icon: t ? '🏷️' : '💳', color: palette[h % palette.length] };
+}
+
+/* 记录行内部结构（记录列表 / 回收站共用），紧凑高密度 + 数字优先 */
+function recRowInner(r, checkClass, actionsHtml){
+    const name = (r.tag && r.tag.replace(/\/+$/,'').replace(/\//g,' · ')) || '未分类';
+    const time = r.datetime ? ((r.datetime.split('T')[1] || '').slice(0,5)) : '';
+    const line1 = [r.city, r.channel, time].filter(Boolean).join(' · ') || '—';
+    const line2 = `👤 ${escapeHtml(r.payer || '-')}　📋 ${escapeHtml(r.owner || '-')}`;
+    const cny = convertToCNY(r.amount, r.currency);
+    const isBase = (r.currency === '人民币') || Math.abs(cny - (Number(r.amount)||0)) < 0.001;
+    const cnyLine = isBase ? '' : `<div class="rcny tnum">≈ ¥${fmt2(cny)}</div>`;
+    const note = r.note ? `<div class="rnote">${escapeHtml(r.note)}</div>` : '';
+    return `
+        <div class="rec-main">
+            <input type="checkbox" class="${checkClass} rec-check" data-id="${r.id}">
+            <div class="rec-info">
+                <div class="rn">${escapeHtml(name)}</div>
+                <div class="rm">${escapeHtml(line1)}</div>
+                <div class="rm2">${line2}</div>
+                ${note}
+            </div>
+            <div class="rec-amt">
+                <div class="ra tnum"><span class="u">${escapeHtml(r.currency||'')}</span>${escapeHtml(r.amount)}</div>
+                ${cnyLine}
+            </div>
+        </div>
+        <div class="rec-acts">${actionsHtml}</div>`;
 }
 
 function updateSelectionState(){ 
@@ -1235,11 +1565,13 @@ function toggleSelectAll(){
         currentRenderedIds.forEach(id => selectedIds.delete(id));
     }
     
-    document.querySelectorAll(".list-check").forEach(cb => {
+    document.querySelectorAll("#recordsContainer .list-check").forEach(cb => {
         cb.checked = isChecked;
+        const row = cb.closest(".rec-row");
+        if (row) row.classList.toggle("selected", isChecked);
     });
 
-    updateSelectionState(); 
+    updateSelectionState();
 }
 
 
@@ -1254,8 +1586,9 @@ function deleteRecord(id){
     trash.unshift(item);
     saveTrash(trash);
     selectedIds.delete(id);
+    filterOptionsDirty = true;
     refreshList();
-    drawCharts();
+    refreshCharts();
     hopFeedback("已移入回收站");
 }
 
@@ -1273,7 +1606,8 @@ function batchDelete(){
     });
     saveRecords(list); saveTrash(trash);
     selectedIds.clear();
-    refreshList(); drawCharts();
+    filterOptionsDirty = true;
+    refreshList(); refreshCharts();
     hopFeedback(`已删除 ${count} 条`);
 }
 
@@ -1331,7 +1665,8 @@ function openEditModal(id){
                 note: document.getElementById("e_note").value
             };
             saveRecords(list);
-            refreshList(); drawCharts();
+            filterOptionsDirty = true;
+            refreshList(); refreshCharts();
             hopFeedback("修改已保存");
             overlay.remove();
         } else {
@@ -1367,47 +1702,30 @@ function showTrashList(){
     container.innerHTML = "";
 
     if (trash.length === 0){
-        container.innerHTML = "<div class='small' style='text-align:center'>空空如也</div>";
+        container.innerHTML = "<div class='rec-empty'>回收站空空如也</div>";
         return;
     }
-    
-    const grayStyle = `color: var(--muted); font-size: 13px; line-height: 1.4;`; 
 
+    const listEl = document.createElement("div");
+    listEl.className = "rec-list";
     trash.forEach(r=>{
-        const div = document.createElement("div");
-        div.className = "list-item";
-        div.style.background = "rgba(255,91,106,0.10)";
-        div.style.borderColor = "rgba(255,91,106,0.28)";
-        div.innerHTML = `
-            <input type="checkbox" class="list-check-trash" data-id="${r.id}" style="width:20px;height:20px;flex-shrink:0;margin-right:8px">
-            <div style="flex-grow:1;display:flex;flex-direction:column;gap:4px">
-                <div style="display:flex;justify-content:space-between;font-weight:600;color:var(--text);font-size:16px;">
-                    <span style="min-width:90px">${escapeHtml(r.currency)} ${escapeHtml(r.amount)}</span>
-                    <span style="max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(r.city || '-')}</span>
-                    <span style="font-size:14px">${escapeHtml(formatDateTimeCompact(r.datetime))}</span>
-                </div>
-                <div style="${grayStyle}">
-                    <span style="margin-right:12px">👤: <strong>${escapeHtml(r.payer || '-')}</strong></span>
-                    <span>📋: <strong>${escapeHtml(r.owner || '-')}</strong></span>
-                    <span>🏷️: ${escapeHtml(r.tag || '-')}</span>
-                    <span>💳: ${escapeHtml(r.channel || '-')}</span>
-                </div>
-                <div style="${grayStyle}white-space:normal;word-break:break-all;">备注: ${escapeHtml(r.note || "-")}</div>
-                <div class="btns" style="justify-content:flex-end;margin-top:4px">
-                    <button class="btn edit" onclick="restoreRecord('${r.id}')">恢复</button>
-                    <button class="btn del" onclick="purgeRecord('${r.id}')">彻底删除</button>
-                </div>
-            </div>
-        `;
-        const cb = div.querySelector(".list-check-trash");
-        cb.checked = selectedTrashIds.has(r.id); 
+        const row = document.createElement("div");
+        row.className = "rec-row";
+        row.innerHTML = recRowInner(r, "list-check-trash", `
+            <button class="mini" onclick="restoreRecord('${r.id}')">恢复</button>
+            <button class="mini del" onclick="purgeRecord('${r.id}')">彻底删除</button>`);
+        const cb = row.querySelector(".list-check-trash");
+        cb.checked = selectedTrashIds.has(r.id);
+        if (cb.checked) row.classList.add('selected');
         cb.onclick = (e) => {
             e.stopPropagation();
-            selectedTrashIds.has(r.id) ? selectedTrashIds.delete(r.id) : selectedTrashIds.add(r.id);
+            if (selectedTrashIds.has(r.id)) { selectedTrashIds.delete(r.id); row.classList.remove('selected'); }
+            else { selectedTrashIds.add(r.id); row.classList.add('selected'); }
             updateTrashSelection();
         };
-        container.appendChild(div);
+        listEl.appendChild(row);
     });
+    container.appendChild(listEl);
 }
 
 function updateTrashSelection(){
@@ -1423,7 +1741,8 @@ function restoreRecord(id){
     let list = loadRecords();
     list.unshift(r);
     saveRecords(list);
-    showTrashList(); drawCharts();
+    filterOptionsDirty = true;
+    showTrashList(); refreshCharts();
     hopFeedback("已恢复");
 }
 
@@ -1442,7 +1761,8 @@ function batchRestore(){
     
     saveTrash(trash); saveRecords(list);
     selectedTrashIds.clear();
-    showTrashList(); drawCharts();
+    filterOptionsDirty = true;
+    showTrashList(); refreshCharts();
     hopFeedback(`已恢复 ${count} 条`);
 }
 
@@ -1466,60 +1786,58 @@ function clearTrash(){
    Stats Optimization (Single Pass)
    ============================ */
 const weekStartDateEl = document.getElementById("weekStartDate");
-const statsFilterOwnerEl = document.getElementById("statsFilterOwner");
-statsFilterOwnerEl.addEventListener("change", drawCharts);
+document.getElementById("statsOwner").addEventListener("change", drawCharts);
+
+// 记录变更后调用：仅当「数据统计」Tab 可见时才重绘图表，
+// 隐藏时跳过全量聚合（切到统计页时 showTab 会重算，结果一致）。
+function refreshCharts(){
+    const statsEl = document.getElementById("stats");
+    if (statsEl && statsEl.style.display !== "none") drawCharts();
+}
 
 function drawCharts(){
     const list = loadRecords();
-    // 【修改点】：从动态配置中读取所有人列表作为基础集合
-    const conf = loadConfig();
-    const ownerSet = new Set(conf.owner || []); 
-    
-    // 继续保留历史记录中的所有人（防止配置里删除了某人，但他的历史账单被隐藏）
-    list.forEach(r => r.owner && ownerSet.add(r.owner));
-    const currentSel = Array.from(statsFilterOwnerEl.options).filter(o=>o.selected).map(o=>o.value);
-    
-    const newOptions = Array.from(ownerSet).sort();
-    const existingOptions = Array.from(statsFilterOwnerEl.options).map(o=>o.value);
-    
-    if (newOptions.length !== existingOptions.length || newOptions.some((o, i) => o !== existingOptions[i])) { 
-        statsFilterOwnerEl.innerHTML = "";
-        newOptions.forEach(o => {
-            const opt = document.createElement("option");
-            opt.value = o; opt.textContent = o;
-            if (currentSel.includes(o)) opt.selected = true;
-            statsFilterOwnerEl.appendChild(opt);
-        });
-    }
 
-    const selectedOwners = Array.from(statsFilterOwnerEl.options).filter(o=>o.selected).map(o=>o.value);
-    
+    // 统计对象（分人计算）：填充下拉并按所选人过滤所有统计
+    const statsOwnerEl = document.getElementById("statsOwner");
+    const ownerBase = new Set(loadConfig().owner || []);
+    list.forEach(r => r.owner && ownerBase.add(r.owner));
+    const ownerOpts = ['全部', ...Array.from(ownerBase).sort()];
+    const existing = Array.from(statsOwnerEl.options).map(o=>o.value);
+    if (existing.length !== ownerOpts.length || ownerOpts.some((o,i)=> o !== existing[i])){
+        const keep = statsOwnerEl.value || '全部';
+        statsOwnerEl.innerHTML = ownerOpts.map(o=>`<option value="${escapeAttr(o)}">${o==='全部'?'全部（所有人合计）':escapeHtml(o)}</option>`).join('');
+        statsOwnerEl.value = ownerOpts.includes(keep) ? keep : '全部';
+    }
+    const selectedOwner = statsOwnerEl.value || '全部';
+
     const weekStart = weekStartDateEl.value ? new Date(weekStartDateEl.value) : new Date();
     weekStart.setHours(0,0,0,0);
     const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate()+7);
-    
+
     const aggregates = {
         week: [0,0,0,0,0,0,0],
         tag: {},
-        channel: {},
-        payer: {},
+        owner: {},
         city: {}
     };
+    let statTotal = 0, statCount = 0;
+    const dateSet = new Set();
 
     list.forEach(r => {
         const recordOwner = r.owner || "未指定所有人";
-        const recordChannel = r.channel || "未指定";
-        const recordPayer = r.payer || "未指定";
         const recordCity = r.city || "未指定城市";
         const recordTags = (r.tag||"").split('/').map(t=>t.trim()).filter(t=>t);
-        
-        if (selectedOwners.length > 0 && !selectedOwners.includes(recordOwner)) return;
+
+        // 分人计算：选定某人时只统计其记录
+        if (selectedOwner !== '全部' && recordOwner !== selectedOwner) return;
 
         const cny = convertToCNY(r.amount, r.currency);
-        
+        statTotal += cny; statCount++;
+        if (r.datetime) dateSet.add(r.datetime.substring(0,10));
+
         const d = new Date(r.datetime);
         if (!isNaN(d) && d >= weekStart && d < weekEnd) {
-            const startDay = weekStart.getDay(); 
             const daysSinceStart = Math.floor((d.getTime() - weekStart.getTime()) / (1000 * 60 * 60 * 24));
             if (daysSinceStart >= 0 && daysSinceStart < 7) {
                 aggregates.week[daysSinceStart] += cny;
@@ -1530,23 +1848,61 @@ function drawCharts(){
         const amtPerTag = cny / recordTags.length;
         recordTags.forEach(t => aggregates.tag[t] = (aggregates.tag[t]||0) + amtPerTag);
 
-        aggregates.channel[recordChannel] = (aggregates.channel[recordChannel]||0) + cny;
-        aggregates.payer[recordPayer] = (aggregates.payer[recordPayer]||0) + cny;
+        aggregates.owner[recordOwner] = (aggregates.owner[recordOwner]||0) + cny;
         aggregates.city[recordCity] = (aggregates.city[recordCity]||0) + cny;
     });
 
     const days = ["周日","周一","周二","周三","周四","周五","周六"];
     const labels = [];
-    const startDay = weekStart.getDay(); 
+    const startDay = weekStart.getDay();
     for(let i=0; i<7; i++) {
         labels.push(days[(startDay + i) % 7]);
     }
     drawBarChart(document.getElementById("barChart"), labels, aggregates.week);
 
-    drawPieChart(document.getElementById("categoryPieChart"), aggregates.tag, "未分类");
-    drawPieChart(document.getElementById("channelPieChart"), aggregates.channel, "未指定");
-    drawPieChart(document.getElementById("payerPieChart"), aggregates.payer, "未指定");
-    drawPieChart(document.getElementById("cityPieChart"), aggregates.city, "未指定城市");
+    // 概览：总支出 + 日均（按有账单的天数平均）
+    const dayN = dateSet.size;
+    document.getElementById("statTotal").textContent = fmtInt(statTotal);
+    document.getElementById("statCount").textContent = statCount;
+    document.getElementById("statDailyAvg").textContent = dayN ? fmtInt(statTotal / dayN) : '0';
+    document.getElementById("statDayCount").textContent = dayN;
+
+    // 占比条：账单所有人 / 城市 / 标签
+    renderProportionBars(document.getElementById("ownerBars"), aggregates.owner, "未指定所有人");
+    renderProportionBars(document.getElementById("cityBars"), aggregates.city, "未指定城市");
+    renderProportionBars(document.getElementById("tagBars"), aggregates.tag, "未分类");
+}
+
+// 渲染「占比条」列表：分类名 + 进度条 + 金额 + 百分比（按金额降序，Top 8）
+function renderProportionBars(container, dataObj, emptyLabel){
+    if (!container) return;
+    const colors = ['var(--c2)','var(--c1)','var(--c3)','var(--c4)','var(--c5)','var(--c6)','var(--accent-2)','var(--text-3)'];
+    const entries = Object.entries(dataObj).filter(e => e[1] > 0).sort((a,b)=> b[1]-a[1]);
+    const total = entries.reduce((s,e)=> s+e[1], 0);
+    if (total === 0 || entries.length === 0){
+        container.innerHTML = `<div class="prop-empty">暂无数据</div>`;
+        return;
+    }
+    const top = entries.slice(0, 8);
+    const shownSum = top.reduce((s,e)=> s+e[1], 0);
+    let html = top.map((e,i)=>{
+        const label = e[0] === "" ? emptyLabel : e[0];
+        const pct = (e[1]/total*100);
+        return `<div class="prop-row">
+            <span class="pn">${escapeHtml(label)}</span>
+            <div class="ptrack"><div class="pfill" style="width:${Math.max(pct,2).toFixed(1)}%;background:${colors[i%colors.length]}"></div></div>
+            <span class="pv tnum">¥${fmtInt(e[1])}<span class="pct">${pct.toFixed(0)}%</span></span>
+        </div>`;
+    }).join('');
+    if (entries.length > top.length){
+        const rest = total - shownSum;
+        html += `<div class="prop-row">
+            <span class="pn" style="color:var(--text-3)">其他 ${entries.length-top.length} 项</span>
+            <div class="ptrack"><div class="pfill" style="width:${Math.max(rest/total*100,2).toFixed(1)}%;background:var(--text-3)"></div></div>
+            <span class="pv tnum">¥${fmtInt(rest)}<span class="pct">${(rest/total*100).toFixed(0)}%</span></span>
+        </div>`;
+    }
+    container.innerHTML = html;
 }
 
 // 读取当前主题颜色，供 Canvas 图表使用（自动适配暗色）
@@ -1558,8 +1914,9 @@ function chartTheme(){
         text: get('--text', '#182338'),
         muted: get('--text-muted', '#6b7591'),
         grid: dark ? "rgba(255,255,255,0.10)" : "rgba(24,35,70,0.08)",
-        primary: get('--primary', '#2b8cff'),
-        surface: get('--surface-2-solid', dark ? '#222b42' : '#f4f6fc')
+        primary: get('--primary', '#4b63e6'),
+        accent2: get('--accent-2', '#6b7ef0'),
+        surface: get('--surface-2-solid', dark ? '#1d212b' : '#f2f4f7')
     };
 }
 
@@ -1601,7 +1958,7 @@ function drawBarChart(canvas, labels, values){
 
         const grad = ctx.createLinearGradient(0, y, 0, H-pad);
         grad.addColorStop(0, th.primary);
-        grad.addColorStop(1, "rgba(74,163,255,0.55)");
+        grad.addColorStop(1, th.accent2);
         ctx.fillStyle = grad;
         const bwSafe = Math.max(bw, 0);
         const rr = Math.max(0, Math.min(6, bwSafe/2));
@@ -1638,7 +1995,7 @@ function drawPieChart(canvas, data, defaultLabel = "未指定"){
 
     ctx.font="11px -apple-system,Arial,sans-serif";
     let start = -Math.PI/2;
-    const colors = ["#3b8ef0","#ff5b6a","#f5b73d","#22c07a","#9b6bff","#5a6b8c","#ef8f3a"];
+    const colors = ["#4b63e6","#22a7f0","#22c07a","#f5a623","#e5686f","#9b6bff","#12b3a6","#8a91a0"];
 
     entries.forEach((e,i)=>{
         const ang = (e[1]/total)*Math.PI*2;
@@ -1712,7 +2069,8 @@ function importJSON(){
                 });
                 saveRecords(l);
                 hopFeedback(`导入成功，新增 ${added} 条记录${skipped ? `（跳过 ${skipped} 条无效数据）` : ''}`);
-                refreshList(); drawCharts();
+                filterOptionsDirty = true;
+                refreshList(); refreshCharts();
             } else {
                  alert("JSON 格式错误：根元素不是数组");
             }
@@ -1722,7 +2080,7 @@ function importJSON(){
 }
 
 /* Init：逐步初始化并隔离单点异常，防止某步失败中断后续初始化 */
-[renderFormSelects, initDefaults, updateRateNote, refreshList, drawCharts].forEach(fn => {
+[renderFormSelects, initDefaults, updateRateNote, refreshList, refreshCharts].forEach(fn => {
     try { fn(); } catch(err){ console.error("初始化步骤失败：", fn.name, err); }
 });
 </script>

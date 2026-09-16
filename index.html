@@ -143,6 +143,21 @@
     }
     input::placeholder,textarea::placeholder{color:var(--text-muted);opacity:.75}
 
+    /* iOS Safari 日期/时间输入框修复：仅在触摸设备（手机）上重置原生外观，
+       避免比下拉框高、文字居中错位；桌面（鼠标）保留原生日历图标 */
+    @media (pointer: coarse){
+        input[type="date"], input[type="datetime-local"]{
+            -webkit-appearance:none; appearance:none;
+            min-height:0; height:auto; line-height:1.4;
+        }
+        input[type="date"]::-webkit-date-and-time-value,
+        input[type="datetime-local"]::-webkit-date-and-time-value{
+            text-align:left; margin:0;
+        }
+        input[type="date"]::-webkit-datetime-edit,
+        input[type="datetime-local"]::-webkit-datetime-edit{ padding:0; line-height:1.4; }
+    }
+
     /* 错误状态样式 */
     input.error-input, select.error-input {
         border-color: var(--danger);
@@ -159,7 +174,9 @@
 
     textarea{min-height:80px;resize:vertical}
     .row{display:flex;gap:var(--gap);margin-bottom:8px}
-    .row .col{flex:1}
+    .row .col{flex:1;min-width:0}
+    /* 表单行内控件统一高度，避免 iOS 日期框比下拉框高导致错位 */
+    .row .col > input, .row .col > select{height:46px}
     .small{font-size:13px;color:var(--text-muted)}
 
     /* 按钮统一微交互 —— 极简：主操作实色，次操作柔和 */
